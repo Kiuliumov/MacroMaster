@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../state_manager/userSlice";
+import { addToast } from '../state_manager/toastSlice';
 import ThemeToggle from "./ThemeToggle";
 import { Menu, X } from "lucide-react";
 
@@ -14,7 +15,10 @@ export default function Navbar() {
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = !!user;
 
-  const handleLogout = () => dispatch(logout());
+const handleLogout = () => {
+  dispatch(logout());
+  dispatch(addToast({ message: "Logout successful ✅", type: "success" }));
+};
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -31,7 +35,6 @@ export default function Navbar() {
             <AuthButtons isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
           </div>
 
-          {/* Mobile controls */}
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
             <button

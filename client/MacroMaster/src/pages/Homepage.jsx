@@ -11,15 +11,17 @@ export default function Homepage() {
         This is a simple homepage component for testing your setup.
       </p>
       <div className="flex space-x-3">
-        <Link href="/login">
-          <a className="px-5 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
-            Log In
-          </a>
+        <Link
+          to="/login"
+          className="px-5 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+        >
+          Log In
         </Link>
-        <Link href="/signup">
-          <a className="px-5 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
-            Sign Up
-          </a>
+        <Link
+          to="/signup"
+          className="px-5 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
+        >
+          Sign Up
         </Link>
       </div>
     </div>

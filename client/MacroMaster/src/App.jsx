@@ -1,31 +1,33 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from './partials/Navbar';
-import Footer from './partials/Footer';
+import Navbar from "./partials/Navbar";
+import Footer from "./partials/Footer";
+import Toast from "./components/Toast";
 import { setUser } from "./state_manager/userSlice";
-import { getJwtFromCookie } from '../authentication';
-import Homepage from './pages/Homepage';
+import { getJwtFromCookie } from "../authentication";
+import Homepage from "./pages/Homepage";
 
 function App() {
-  const dispatch = useDispatch();
+	const dispatch = useDispatch();
 
-  useEffect(() => {
-    const token = getJwtFromCookie();
-    if (token) {
-      dispatch(setUser({ token }));
-    }
-  }, [dispatch]);
+	useEffect(() => {
+		const token = getJwtFromCookie();
+		if (token) {
+			dispatch(setUser({ token }));
+		}
+	}, [dispatch]);
 
-  return (
-    <>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-      </Routes>
-      <Footer />
-    </>
-  );
+	return (
+		<>
+			<Toast />
+			<Navbar />
+			<Routes>
+				<Route path="/" element={<Homepage />} />
+			</Routes>
+			<Footer />
+		</>
+	);
 }
 
 export default App;
