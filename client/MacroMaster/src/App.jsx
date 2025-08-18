@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from './partials/Navbar';
 import Footer from './partials/Footer';
 import { setUser } from "./state_manager/userSlice";
@@ -19,7 +20,9 @@ function App() {
   return (
     <>
       <Navbar />
-      <Homepage />
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+      </Routes>
       <Footer />
     </>
   );

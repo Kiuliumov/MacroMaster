@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Homepage() {
   return (
@@ -10,18 +11,16 @@ export default function Homepage() {
         This is a simple homepage component for testing your setup.
       </p>
       <div className="flex space-x-3">
-        <a
-          href="/login"
-          className="px-5 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-        >
-          Log In
-        </a>
-        <a
-          href="/signup"
-          className="px-5 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition"
-        >
-          Sign Up
-        </a>
+        <Link href="/login">
+          <a className="px-5 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+            Log In
+          </a>
+        </Link>
+        <Link href="/signup">
+          <a className="px-5 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition">
+            Sign Up
+          </a>
+        </Link>
       </div>
     </div>
   );
