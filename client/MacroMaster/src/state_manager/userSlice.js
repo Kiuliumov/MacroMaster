@@ -13,6 +13,7 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
+      document.cookie = "jwt=; Max-Age=0; path=/; SameSite=Lax";
     },
   },
 });
