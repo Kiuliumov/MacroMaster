@@ -19,5 +19,22 @@ class RegisterSerializer(serializers.ModelSerializer):
             first_name=validated_data.get('first_name', ''),
             last_name=validated_data.get('last_name', '')
         )
-        Profile.objects.create(user=user)
         return user
+
+
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+
+    class Meta:
+        model = Profile
+        fields = [
+            'username', 'email',
+            'age', 'gender', 'height_cm', 'weight_kg',
+            'activity_level', 'goal', 'target_weight_kg',
+            'daily_calorie_goal', 'profile_picture', 'bio',
+            'created_at', 'updated_at'
+        ]
+        read_only_fields = ['created_at', 'updated_at']
