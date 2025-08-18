@@ -1,29 +1,33 @@
+import ThemeToggle from "./ThemeToggle";
+
 export default function Navbar() {
   return (
-    <header className="bg-white shadow">
+    <header className="bg-white dark:bg-gray-900 shadow">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+
           <div className="flex-shrink-0">
             <img
               className="h-8 w-auto"
               src="https://cdn.rareblocks.xyz/collection/celebration/images/logo.svg"
-              alt="Company Logo"
+              alt="Macro Logo"
             />
           </div>
 
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-8" aria-label="Primary Navigation">
             {["Home", "Features", "Pricing", "About", "Contact"].map((item) => (
               <a
                 key={item}
                 href="#"
-                className="text-gray-700 hover:text-blue-600 transition-all duration-200 font-medium"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium"
               >
                 {item}
               </a>
             ))}
           </nav>
 
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center space-x-4">
+            <ThemeToggle />
             <a
               href="#"
               className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 transition-all duration-200"
@@ -32,10 +36,12 @@ export default function Navbar() {
             </a>
           </div>
 
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <ThemeToggle />
             <button
               type="button"
-              className="text-gray-700 hover:text-blue-600 focus:outline-none"
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 focus:outline-none"
+              aria-label="Open menu"
             >
               <svg
                 className="h-6 w-6"
@@ -48,6 +54,7 @@ export default function Navbar() {
               </svg>
             </button>
           </div>
+
         </div>
       </div>
     </header>
