@@ -1,9 +1,29 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../state_manager/userSlice";
 import ThemeToggle from "./ThemeToggle";
 
+const publicLinks = ["Home", "Features", "Pricing", "About"];
+const privateLinks = ["Dashboard", "Profile", "Forum"];
+
 export default function Navbar() {
+  const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = !!user;
+
+  const navLinkClasses =
+    "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium";
+  const navLinkLoggedInClasses =
+    "text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 font-medium";
+  const buttonClasses =
+    "inline-flex items-center px-4 py-2 text-sm font-semibold text-white rounded-md shadow transition-all duration-200";
+  const loginButtonClasses = buttonClasses + " bg-blue-600 hover:bg-blue-700";
+  const signupButtonClasses = buttonClasses + " bg-blue-500 hover:bg-blue-600";
+  const dashboardButtonClasses = buttonClasses + " bg-green-600 hover:bg-green-700";
+  const logoutButtonClasses = buttonClasses + " bg-red-600 hover:bg-red-700";
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
 
   return (
     <header className="bg-white dark:bg-gray-900 shadow">
@@ -19,14 +39,14 @@ export default function Navbar() {
           </div>
 
           <nav className="hidden md:flex space-x-8">
-            {["Home", "Features", "Pricing", "About"].map((item) => (
-              <a key={item} href={`/${item.toLowerCase()}`} className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-medium">
+            {publicLinks.map((item) => (
+              <a key={item} href={`/${item.toLowerCase()}`} className={navLinkClasses}>
                 {item}
               </a>
             ))}
             {isLoggedIn &&
-              ["Dashboard", "Profile", "Forum"].map((item) => (
-                <a key={item} href={`/${item.toLowerCase()}`} className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 font-medium">
+              privateLinks.map((item) => (
+                <a key={item} href={`/${item.toLowerCase()}`} className={navLinkLoggedInClasses}>
                   {item}
                 </a>
               ))}
@@ -35,15 +55,20 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             {isLoggedIn ? (
-              <a href="/dashboard" className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-md shadow hover:bg-green-700 transition-all duration-200">
-                Dashboard
-              </a>
+              <>
+                <a href="/dashboard" className={dashboardButtonClasses}>
+                  Dashboard
+                </a>
+                <button onClick={handleLogout} className={logoutButtonClasses}>
+                  Logout
+                </button>
+              </>
             ) : (
               <>
-                <a href="/login" className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 transition-all duration-200">
+                <a href="/login" className={loginButtonClasses}>
                   Log In
                 </a>
-                <a href="/signup" className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-blue-500 rounded-md shadow hover:bg-blue-600 transition-all duration-200">
+                <a href="/signup" className={signupButtonClasses}>
                   Sign Up
                 </a>
               </>
@@ -53,6 +78,7 @@ export default function Navbar() {
           <div className="md:hidden flex items-center space-x-2">
             <ThemeToggle />
           </div>
+
         </div>
       </div>
     </header>
