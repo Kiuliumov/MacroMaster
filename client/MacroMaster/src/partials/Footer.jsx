@@ -1,3 +1,5 @@
+import logo from '../assets/MacroMaster.png';
+
 export default function Footer() {
   const socialPaths = [
     // Facebook
@@ -15,11 +17,16 @@ export default function Footer() {
       <div className="px-4 mx-auto sm:px-6 lg:px-8 max-w-7xl">
         <div className="grid grid-cols-2 md:col-span-3 lg:grid-cols-6 gap-y-16 gap-x-12">
           <div className="col-span-2 md:col-span-3 lg:col-span-2 lg:pr-8">
-            <img
-              className="w-auto h-9"
-              src="https://cdn.rareblocks.xyz/collection/celebration/images/logo.svg"
-              alt="Company Logo"
-            />
+            <div className="flex items-center space-x-2">
+							<img
+								className="h-8 w-8"
+								src={logo}
+								alt="MacroMaster Logo"
+							/>
+							<span className="text-xl font-bold text-gray-900 dark:text-white">
+								MacroMaster
+							</span>
+						</div>
             <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300 mt-7">
               Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
               sint. Velit officia consequat duis enim velit mollit.
