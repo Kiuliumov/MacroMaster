@@ -3,8 +3,8 @@ import { useDispatch } from "react-redux";
 import Navbar from './partials/Navbar';
 import Footer from './partials/Footer';
 import { setUser } from "./state_manager/userSlice";
-import { getJwtFromCookie } from '../authentication'
-
+import { getJwtFromCookie } from '../authentication';
+import Homepage from './pages/Homepage';
 
 function App() {
   const dispatch = useDispatch();
@@ -19,6 +19,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <Homepage />
       <Footer />
     </>
   );
