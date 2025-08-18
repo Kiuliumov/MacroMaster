@@ -1,33 +1,27 @@
 import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  const [darkMode, setDarkMode] = useState(false);
+  const [theme, setTheme] = useState(
+    localStorage.getItem("theme") || "light"
+  );
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "dark" || (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      setDarkMode(true);
-      document.documentElement.classList.add("dark");
-    }
-  }, []);
+    const root = window.document.documentElement;
+    root.classList.remove(theme === "dark" ? "light" : "dark");
+    root.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [darkMode]);
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <button
-      onClick={() => setDarkMode(!darkMode)}
-      className="p-2 rounded-md bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition"
-      aria-label="Toggle Dark Mode"
+      onClick={toggleTheme}
+      className="p-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 transition-colors"
     >
-      {darkMode ? "☀️" : "🌙"}
+      {theme === "dark" ? "☀️" : "🌙"}
     </button>
   );
 }
