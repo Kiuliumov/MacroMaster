@@ -14,9 +14,9 @@ const socialPaths = [
 ];
 
 const footerLinks = {
-  Company: ["About", "Features", "Works", "Career"],
-  Help: ["Support", "Sign up", "Guide", "Reports"],
-  Products: ["Login", "Register", "Settings", "Reports"],
+  Company: ["About", "Features", "Career"],
+  Help: ["Support", "Sign up", "API", "Guide"],
+  Products: ["Login", "Register", "Settings", "Forum"],
 };
 
 export default function Footer() {
@@ -32,8 +32,7 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300 mt-7">
-              Amet minim mollit non deserunt ullamco est sit aliqua dolor do
-              amet sint.
+             Track, manage, and crush your goals with the ultimate calorie app of 2025!
             </p>
             <ul className="flex items-center space-x-3 mt-9">
               {socialPaths.map((path, i) => (
