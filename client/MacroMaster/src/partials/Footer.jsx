@@ -14,7 +14,7 @@ const socialPaths = [
 ];
 
 const footerLinks = {
-  Company: ["About", "Features", "Career"],
+  Company: ["About", "Features", "Careers"],
   Help: ["Support", "Sign up", "API", "Guide"],
   Products: ["Login", "Register", "Settings", "Forum"],
 };

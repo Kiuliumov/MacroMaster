@@ -8,6 +8,7 @@ import { setUser } from "./state_manager/userSlice";
 import { getJwtFromCookie } from "../authentication";
 import Homepage from "./pages/Homepage";
 import About from './pages/About'
+import CareersPage from "./pages/CareersPage";
 
 function App() {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ function App() {
 			<Routes>
 				<Route path="/" element={<Homepage />} />
         <Route path="/about" element={<About />} />
+        <Route path="/careers" element={<CareersPage />} />
 			</Routes>
 			<Footer />
 		</>
