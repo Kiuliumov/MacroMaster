@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../state_manager/userSlice";
-import { addToast } from '../state_manager/toastSlice';
+import { addToast } from "../state_manager/toastSlice";
+import { Link } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import { Menu, X } from "lucide-react";
 
@@ -15,10 +16,10 @@ export default function Navbar() {
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = !!user;
 
-const handleLogout = () => {
-  dispatch(logout());
-  dispatch(addToast({ message: "Logout successful ✅", type: "success" }));
-};
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(addToast({ message: "Logout successful ✅", type: "success" }));
+  };
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -26,13 +27,15 @@ const handleLogout = () => {
     <header className="bg-white dark:bg-gray-900 shadow sticky top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <Logo />
+          <Link to="/">
+            <Logo />
+          </Link>
 
-          <DesktopNav />
+          <DesktopNav asLink={Link} />
 
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <AuthButtons isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
+            <AuthButtons isLoggedIn={isLoggedIn} handleLogout={handleLogout} LinkComponent={Link} />
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
@@ -56,6 +59,7 @@ const handleLogout = () => {
           isLoggedIn={isLoggedIn}
           handleLogout={handleLogout}
           setMobileOpen={setMobileOpen}
+          LinkComponent={Link}
         />
       )}
     </header>
