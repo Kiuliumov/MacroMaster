@@ -7,6 +7,7 @@ import Toast from "./components/Toast";
 import { setUser } from "./state_manager/userSlice";
 import { getJwtFromCookie } from "../authentication";
 import Homepage from "./pages/Homepage";
+import About from './pages/About'
 
 function App() {
 	const dispatch = useDispatch();
@@ -24,6 +25,7 @@ function App() {
 			<Navbar />
 			<Routes>
 				<Route path="/" element={<Homepage />} />
+        <Route path="/about" element={<About />} />
 			</Routes>
 			<Footer />
 		</>
