@@ -25,7 +25,7 @@ export default function Homepage() {
           {!isLoggedIn ? (
             <>
               <Link
-                to="/signup"
+                to="/register"
                 className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-xl shadow-lg hover:bg-blue-600 hover:shadow-xl transition transform hover:-translate-y-0.5"
               >
                 Get Started

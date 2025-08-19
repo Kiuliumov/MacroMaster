@@ -11,6 +11,10 @@ import About from "./pages/About";
 import CareersPage from "./pages/CareersPage";
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from "./pages/auth/RegisterPage";
+import ForgotPasswordPage
+ from "./pages/auth/ForgotPasswordPage";
+import PricingPage from "./pages/PricingPage";
+
 function App() {
 	const dispatch = useDispatch();
 
@@ -29,8 +33,10 @@ function App() {
 				<Route path="/" element={<Homepage />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/careers" element={<CareersPage />} />
+				<Route path="/pricing" element= {<PricingPage />} />
 				<Route path="/login" element={<LoginPage />} />
       			<Route path="/register" element={<RegisterPage />} />
+				<Route path="/forgot-password" element= {<ForgotPasswordPage />} />
 			</Routes>
 			<Footer />
 		</>

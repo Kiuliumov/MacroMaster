@@ -22,7 +22,7 @@ export default function AuthButtons({ isLoggedIn, handleLogout }) {
             <Link to="/login">Log In</Link>
           </Button>
           <Button className="bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600">
-            <Link to="/signup">Sign Up</Link>
+            <Link to="/register">Sign Up</Link>
           </Button>
         </>
       )}
