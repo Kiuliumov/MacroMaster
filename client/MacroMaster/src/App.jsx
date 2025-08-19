@@ -14,6 +14,7 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage
  from "./pages/auth/ForgotPasswordPage";
 import PricingPage from "./pages/PricingPage";
+import ScrollToTop from "./components/Scroller";
 
 function App() {
 	const dispatch = useDispatch();
@@ -25,6 +26,7 @@ function App() {
 		}
 	}, [dispatch]);
 
+	<ScrollToTop />
 	return (
 		<>
 			<Toast />
