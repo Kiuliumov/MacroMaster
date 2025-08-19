@@ -9,12 +9,14 @@ import { getJwtFromCookie } from "../authentication";
 import Homepage from "./pages/Homepage";
 import About from "./pages/About";
 import CareersPage from "./pages/CareersPage";
-import LoginPage from './pages/auth/LoginPage';
+import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
-import ForgotPasswordPage
- from "./pages/auth/ForgotPasswordPage";
+import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import PricingPage from "./pages/PricingPage";
+import DashboardPage from "./pages/DashboardPage";
 import ScrollToTop from "./components/Scroller";
+import ProtectedRoute from "./route_components/ProtectedRoute";
+import GuestRoute from "./route_components/GuestRoute";
 
 function App() {
 	const dispatch = useDispatch();
@@ -26,19 +28,50 @@ function App() {
 		}
 	}, [dispatch]);
 
-	<ScrollToTop />
 	return (
 		<>
+			<ScrollToTop />
 			<Toast />
 			<Navbar />
 			<Routes>
 				<Route path="/" element={<Homepage />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/careers" element={<CareersPage />} />
-				<Route path="/pricing" element= {<PricingPage />} />
-				<Route path="/login" element={<LoginPage />} />
-      			<Route path="/register" element={<RegisterPage />} />
-				<Route path="/forgot-password" element= {<ForgotPasswordPage />} />
+				<Route path="/pricing" element={<PricingPage />} />
+
+				<Route
+					path="/login"
+					element={
+						<GuestRoute>
+							<LoginPage />
+						</GuestRoute>
+					}
+				/>
+				<Route
+					path="/register"
+					element={
+						<GuestRoute>
+							<RegisterPage />
+						</GuestRoute>
+					}
+				/>
+				<Route
+					path="/forgot-password"
+					element={
+						<GuestRoute>
+							<ForgotPasswordPage />
+						</GuestRoute>
+					}
+				/>
+
+				<Route
+					path="/dashboard"
+					element={
+						<ProtectedRoute>
+							<DashboardPage />
+						</ProtectedRoute>
+					}
+				/>
 			</Routes>
 			<Footer />
 		</>
