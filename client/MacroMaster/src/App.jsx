@@ -6,7 +6,7 @@ import Navbar from "./partials/Navbar";
 import Footer from "./partials/Footer";
 import Toast from "./components/Toast";
 import ScrollToTop from "./components/Scroller";
-
+import CookieNotice from "./components/CookieNotice";
 import { setUser } from "./state_manager/userSlice";
 import { getJwtFromCookie } from "../authentication";
 
@@ -39,6 +39,7 @@ function App() {
 		<>
 			<ScrollToTop />
 			<Toast />
+			< CookieNotice />
 			<Navbar />
 
 			<Routes>
