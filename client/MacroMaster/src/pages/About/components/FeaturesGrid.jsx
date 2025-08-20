@@ -1,6 +1,7 @@
 import React from "react";
 import { Apple, Activity, Scale, Users } from "lucide-react";
 import FeatureCard from "./FeatureCard";
+import { commonStyles } from "../../../styles/commonStyles";
 
 export default function FeaturesGrid() {
   const features = [
@@ -11,7 +12,7 @@ export default function FeaturesGrid() {
   ];
 
   return (
-    <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-8 max-w-5xl w-full">
+    <div className={`${commonStyles.featuresGrid}`}>
       {features.map((feature, idx) => (
         <FeatureCard key={idx} {...feature} />
       ))}
