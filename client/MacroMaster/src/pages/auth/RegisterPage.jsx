@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../../config";
+import PasswordStrengthMeter from "../../components/PassStrength";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -88,26 +89,28 @@ export default function RegisterPage() {
             />
           </div>
 
-          <div className="flex flex-col md:flex-row w-full gap-3 md:gap-4">
+          <div>
             <input
               type="password"
               name="password"
               placeholder="Password"
               value={form.password}
               onChange={handleChange}
-              className="w-full md:flex-1 px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
             />
-            <input
-              type="password"
-              name="password2"
-              placeholder="Confirm password"
-              value={form.password2}
-              onChange={handleChange}
-              className="w-full md:flex-1 px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
-            />
+            <PasswordStrengthMeter password={form.password} />
           </div>
+
+          <input
+            type="password"
+            name="password2"
+            placeholder="Confirm password"
+            value={form.password2}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+            required
+          />
 
           <button
             type="submit"
