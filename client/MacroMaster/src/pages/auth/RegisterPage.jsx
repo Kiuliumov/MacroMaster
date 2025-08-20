@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../../config";
 import PasswordStrengthMeter from "../../components/PassStrength";
+import PasswordInput from "../../components/PasswordField";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -56,6 +57,7 @@ export default function RegisterPage() {
             placeholder="Username"
             value={form.username}
             onChange={handleChange}
+            autoComplete="username"
             className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
@@ -66,6 +68,7 @@ export default function RegisterPage() {
             placeholder="Email"
             value={form.email}
             onChange={handleChange}
+            autoComplete="email"
             className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
@@ -77,6 +80,7 @@ export default function RegisterPage() {
               placeholder="First name"
               value={form.first_name}
               onChange={handleChange}
+              autoComplete="given-name"
               className="w-full md:flex-1 px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <input
@@ -85,31 +89,28 @@ export default function RegisterPage() {
               placeholder="Last name"
               value={form.last_name}
               onChange={handleChange}
+              autoComplete="family-name"
               className="w-full md:flex-1 px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
 
           <div>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
+            <PasswordInput
               value={form.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-              required
+              placeholder="Password"
+              name="password"
+              autoComplete="new-password"
             />
             <PasswordStrengthMeter password={form.password} />
           </div>
 
-          <input
-            type="password"
-            name="password2"
-            placeholder="Confirm password"
+          <PasswordInput
             value={form.password2}
             onChange={handleChange}
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
+            placeholder="Confirm password"
+            name="password2"
+            autoComplete="new-password"
           />
 
           <button
