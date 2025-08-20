@@ -27,7 +27,7 @@ const positions = [
 export default function CareersPage() {
   const styles = {
     container:
-      "min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center py-6 px-4",
+      "min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center py-6 px-4",
     logo: "h-16 w-16 mb-4",
     title: "text-4xl md:text-5xl font-bold mb-3 text-center",
     titleHighlight: "text-green-600 dark:text-green-400",

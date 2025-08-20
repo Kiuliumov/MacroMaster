@@ -29,8 +29,7 @@ export default function SupportPage() {
 
 	const styles = {
 		container:
-			"min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center px-4 py-12",
-		headerWrapper: "w-full max-w-4xl text-center mb-12",
+			"min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 text-gray-900 dark:text-gray-100 flex flex-col items-center px-4 py-12",
 		headerTitle: "text-4xl md:text-5xl font-extrabold mb-4",
 		headerSubtitle: "text-lg md:text-xl text-gray-600 dark:text-gray-300",
 		grid: "grid grid-cols-1 lg:grid-cols-2 gap-10 w-full max-w-6xl",
