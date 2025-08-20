@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../state_manager/userSlice";
 import { addToast } from "../state_manager/toastSlice";
@@ -35,7 +35,11 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <AuthButtons isLoggedIn={isLoggedIn} handleLogout={handleLogout} LinkComponent={Link} />
+            <AuthButtons
+              isLoggedIn={isLoggedIn}
+              handleLogout={handleLogout}
+              LinkComponent={Link}
+            />
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
