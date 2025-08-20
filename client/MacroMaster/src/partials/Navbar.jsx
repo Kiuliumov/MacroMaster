@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../state_manager/userSlice";
 import { addToast } from "../state_manager/toastSlice";
