@@ -1,8 +1,9 @@
 import React from "react";
+import { commonStyles } from "../styles/commonStyles"
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-gray-900 dark:text-gray-100 p-8">
+    <div className={commonStyles.container}>
       <div className="max-w-4xl mx-auto">
         <h1 className="text-5xl font-extrabold mb-8 text-center text-blue-500 drop-shadow-sm">
           Privacy Policy
