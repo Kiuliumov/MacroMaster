@@ -17,6 +17,8 @@ import DashboardPage from "./pages/DashboardPage";
 import ScrollToTop from "./components/Scroller";
 import ProtectedRoute from "./route_components/ProtectedRoute";
 import GuestRoute from "./route_components/GuestRoute";
+import SupportPage from "./pages/SupportPage";
+import FeaturesPage from "./pages/FeaturesPage";
 
 function App() {
 	const dispatch = useDispatch();
@@ -38,6 +40,8 @@ function App() {
 				<Route path="/about" element={<About />} />
 				<Route path="/careers" element={<CareersPage />} />
 				<Route path="/pricing" element={<PricingPage />} />
+				<Route path="/support" element={<SupportPage />} />
+				<Route path="/features" element={<FeaturesPage />} />
 
 				<Route
 					path="/login"
