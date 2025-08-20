@@ -15,7 +15,7 @@ const socialPaths = [
 
 const footerLinks = {
 	Company: ["About", "Features", "Careers"],
-	Help: ["Support", "API", "Dashboard"],
+	Help: ["Support", "API", "Privacy Policy"],
 	Products: ["Login", "Register", "Forum"],
 };
 
@@ -72,7 +72,11 @@ export default function Footer() {
 								{links.map((link) => (
 									<li key={link}>
 										<Link
-											to={`/${link.toLowerCase().replace(" ", "")}`}
+											to={`/${
+												link === "Privacy Policy"
+													? "policy"
+													: link.toLowerCase().replace(" ", "")
+											}`}
 											className={footerStyles.link}
 										>
 											{link}

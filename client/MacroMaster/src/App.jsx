@@ -14,9 +14,11 @@ import Homepage from "./pages/Homepage";
 import About from "./pages/About";
 import CareersPage from "./pages/CareersPage";
 import PricingPage from "./pages/PricingPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import SupportPage from "./pages/SupportPage";
 import FeaturesPage from "./pages/FeaturesPage";
 import DashboardPage from "./pages/DashboardPage";
+
 
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -49,6 +51,8 @@ function App() {
 				<Route path="/pricing" element={<PricingPage />} />
 				<Route path="/support" element={<SupportPage />} />
 				<Route path="/features" element={<FeaturesPage />} />
+				<Route path="/policy" element={<PrivacyPolicy />} />
+
 
 				<Route
 					path="/login"
