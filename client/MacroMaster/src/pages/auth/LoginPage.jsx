@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../../config";
+import PasswordInput from "../../components/PasswordField";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
@@ -31,9 +32,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
-          Login
-        </h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">Login</h1>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
@@ -46,13 +45,11 @@ export default function LoginPage() {
             className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             required
           />
-          <input
-            type="password"
+
+          <PasswordInput
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
           />
 
           <div className="text-center">
