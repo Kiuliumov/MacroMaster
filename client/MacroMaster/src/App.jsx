@@ -11,7 +11,7 @@ import { setUser } from "./state_manager/userSlice";
 import { getJwtFromCookie } from "../authentication";
 
 import Homepage from "./pages/Homepage";
-import About from "./pages/About";
+import About from "./pages/About/About";
 import CareersPage from "./pages/CareersPage";
 import PricingPage from "./pages/PricingPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
