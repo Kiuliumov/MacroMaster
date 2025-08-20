@@ -3,6 +3,15 @@ import { API_BASE_URL } from "../../config";
 import PasswordStrengthMeter from "../../components/PassStrength";
 import PasswordInput from "../../components/PasswordField";
 
+const styles = {
+  container:
+    "min-h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center px-6 py-12",
+  card: "w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700",
+  title: "text-3xl md:text-4xl font-bold mb-6 text-center",
+  link: "text-green-600 dark:text-green-400 hover:underline font-medium",
+  textCenter: "text-center text-sm text-gray-600 dark:text-gray-400 mt-6",
+};
+
 export default function RegisterPage() {
   const [form, setForm] = useState({
     username: "",
@@ -42,11 +51,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">
-          Create Account
-        </h1>
+    <div className={styles.container}>
+      <div className={styles.card}>
+        <h1 className={styles.title}>Create Account</h1>
 
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
 
@@ -121,12 +128,9 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+        <p className={styles.textCenter}>
           Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-green-600 dark:text-green-400 font-medium hover:underline"
-          >
+          <a href="/login" className={styles.link}>
             Log in
           </a>
         </p>
