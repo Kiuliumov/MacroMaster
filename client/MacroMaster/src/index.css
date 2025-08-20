@@ -3,3 +3,8 @@
 textarea {
   resize: none;
 }
+
+button,
+a {
+cursor: pointer;
+}
