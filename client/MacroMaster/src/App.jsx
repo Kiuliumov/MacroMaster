@@ -12,11 +12,11 @@ import { getJwtFromCookie } from "../authentication";
 
 import Homepage from "./pages/Homepage";
 import About from "./pages/About/About";
-import CareersPage from "./pages/CareersPage";
+import CareersPage from "./pages/Careers/CareersPage";
 import PricingPage from "./pages/PricingPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import SupportPage from "./pages/SupportPage";
-import FeaturesPage from "./pages/FeaturesPage";
+import FeaturesPage from "./pages/Features/FeaturesPage";
 import DashboardPage from "./pages/DashboardPage";
 
 
