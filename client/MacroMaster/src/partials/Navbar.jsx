@@ -16,7 +16,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(logout());
-    dispatch(addToast({ message: "Logout successful ✅", type: "success" }));
+    dispatch(addToast({ message: "Logout successful!", type: "success" }));
   };
 
   const [mobileOpen, setMobileOpen] = useState(false);
