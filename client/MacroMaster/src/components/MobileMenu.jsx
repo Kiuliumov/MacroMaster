@@ -108,7 +108,7 @@ export default function MobileMenu({ handleLogout, setMobileOpen }) {
               </Button>
               <Button className="w-full px-4 py-2 text-sm bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600">
                 <Link
-                  to="/signup"
+                  to="/register"
                   style={{
                     display: "block",
                     width: "100%",

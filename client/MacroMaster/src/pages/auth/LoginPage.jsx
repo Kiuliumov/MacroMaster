@@ -12,15 +12,24 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
+    console.log(API_BASE_URL);
     try {
       const res = await fetch(`${API_BASE_URL}/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
-      if (!res.ok) throw new Error("Invalid credentials.");
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.detail || "Invalid credentials.");
+      }
+
+      document.cookie = `access_token=${data.access}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
+
+      document.cookie = `refresh_token=${data.refresh}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`;
+
       window.location.href = "/dashboard";
     } catch (err) {
       setError(err.message);

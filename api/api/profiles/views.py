@@ -13,7 +13,7 @@ from .serializers import ProfileSerializer
 
 
 class RegisterView(APIView):
-    async def post(self, request):
+    def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
@@ -27,7 +27,7 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
-    async def post(self, request):
+    def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(request, username=username, password=password)

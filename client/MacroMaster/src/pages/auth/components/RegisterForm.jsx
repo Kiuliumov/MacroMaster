@@ -48,7 +48,9 @@ export default function RegisterForm() {
         setErrors((prev) => ({
           ...prev,
           password:
-            value && value.length < 8 ? "Password must be at least 8 characters" : "",
+            value && value.length < 8
+              ? "Password must be at least 8 characters"
+              : "",
           password2:
             form.password2 && value !== form.password2
               ? "Passwords do not match"
@@ -77,25 +79,69 @@ export default function RegisterForm() {
     e.preventDefault();
     setSubmitError("");
 
-    if (errors.username || errors.email || errors.password || errors.password2) return;
+    if (errors.username || errors.email || errors.password || errors.password2)
+      return;
 
     try {
       setLoading(true);
+
       const res = await fetch(`${API_BASE_URL}/register/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify(form),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errData = await res.json();
-        throw new Error(
-          errData.detail || JSON.stringify(errData) || "Registration failed"
-        );
+        const fieldErrors = {
+          username: "",
+          email: "",
+          password: "",
+          password2: "",
+        };
+
+        Object.keys(data).forEach((key) => {
+          if (Object.prototype.hasOwnProperty.call(fieldErrors, key)) {
+            fieldErrors[key] = Array.isArray(data[key])
+              ? data[key].join(", ")
+              : data[key];
+          } else {
+            setSubmitError(data[key]);
+          }
+        });
+
+        setErrors((prev) => ({ ...prev, ...fieldErrors }));
+        return;
       }
 
-      window.location.href = "/";
+      if (!sessionStorage.getItem("autoLoggedIn")) {
+        const loginRes = await fetch(`${API_BASE_URL}/login/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: form.username,
+            password: form.password,
+          }),
+        });
+
+        const loginData = await loginRes.json();
+
+        if (!loginRes.ok) {
+          throw new Error(loginData.detail || "Login failed");
+        }
+
+        document.cookie = `access=${loginData.access}; path=/; max-age=${
+          60 * 60 * 24
+        }; SameSite=Lax; Secure`;
+        document.cookie = `refresh=${loginData.refresh}; path=/; max-age=${
+          60 * 60 * 24 * 7
+        }; SameSite=Lax; Secure`;
+
+        sessionStorage.setItem("autoLoggedIn", "true");
+
+        window.location.href = "/";
+      }
     } catch (err) {
       setSubmitError(err.message);
     } finally {
@@ -105,7 +151,9 @@ export default function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
-      {submitError && <p className="text-red-600 font-semibold mb-2">{submitError}</p>}
+      {submitError && (
+        <p className="text-red-600 font-semibold mb-2">{submitError}</p>
+      )}
 
       <FormInput
         name="username"

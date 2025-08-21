@@ -1,26 +1,36 @@
-from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import Profile
+from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 User = get_user_model()
 
+
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all(), message="Email is already in use.")]
+    )
+    username = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all(), message="Username is already taken.")]
+    )
+    password = serializers.CharField(write_only=True, min_length=8)
+    password2 = serializers.CharField(write_only=True)
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'first_name', 'last_name']
+        fields = ('username', 'email', 'first_name', 'last_name', 'password', 'password2')
+
+    def validate(self, data):
+        if data['password'] != data['password2']:
+            raise serializers.ValidationError({"password2": "Passwords do not match."})
+        return data
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data.get('email'),
-            password=validated_data['password'],
-            first_name=validated_data.get('first_name', ''),
-            last_name=validated_data.get('last_name', '')
-        )
+        validated_data.pop('password2')
+        user = User.objects.create_user(**validated_data)
         return user
-
 
 
 

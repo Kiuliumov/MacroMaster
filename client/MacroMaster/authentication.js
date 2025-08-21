@@ -1,4 +1,6 @@
 export function getJwtFromCookie(cookieName = "token") {
-  const match = document.cookie.match(new RegExp(`(?:^|; )${cookieName}=([^;]+)`));
-  return match ? match[1] : null;
+  const match = document.cookie.match(
+    new RegExp(`(?:^|;\\s*)${cookieName}=([^;]*)`)
+  );
+  return match ? decodeURIComponent(match[1]) : null;
 }
