@@ -1,6 +1,6 @@
 export const commonStyles = {
   container:
-    "min-h-screen flex flex-col items-center justify-center px-6 py-12 text-gray-900 dark:text-gray-100 bg-gradient-to-b from-white via-gray-50 to-gray-100 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800",
+        "min-h-screen flex flex-col items-center justify-center px-8 py-12 text-gray-900 dark:text-gray-100 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800",
   card:
     "w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700",
   title: "text-3xl md:text-4xl font-bold mb-6 text-center",
