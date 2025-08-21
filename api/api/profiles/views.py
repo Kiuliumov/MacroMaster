@@ -31,6 +31,7 @@ class LoginView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(request, username=username, password=password)
+
         if user:
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -39,10 +40,13 @@ class LoginView(APIView):
                     "email": user.email,
                     "first_name": user.first_name,
                     "last_name": user.last_name,
+                    "is_staff": user.is_staff,
+                    "is_superuser": user.is_superuser
                 },
                 "access": str(refresh.access_token),
                 "refresh": str(refresh)
             })
+
         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
