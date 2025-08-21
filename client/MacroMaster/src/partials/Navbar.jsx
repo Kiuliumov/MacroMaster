@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { logout } from "../state_manager/userSlice";
 import { addToast } from "../state_manager/toastSlice";
 import { Link } from "react-router-dom";
@@ -13,8 +13,6 @@ import MobileMenu from "../components/MobileMenu";
 
 export default function Navbar() {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
-  const isLoggedIn = !!user;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -36,7 +34,6 @@ export default function Navbar() {
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
             <AuthButtons
-              isLoggedIn={isLoggedIn}
               handleLogout={handleLogout}
               LinkComponent={Link}
             />
@@ -60,7 +57,6 @@ export default function Navbar() {
 
       {mobileOpen && (
         <MobileMenu
-          isLoggedIn={isLoggedIn}
           handleLogout={handleLogout}
           setMobileOpen={setMobileOpen}
           LinkComponent={Link}

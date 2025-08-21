@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
-import Button from "../components/Button";
+import Button from "./Button";
+import { useAuth } from "../../hooks/useAuth";
 
-export default function AuthButtons({ isLoggedIn, handleLogout }) {
+export default function AuthButtons({ handleLogout }) {
+  const { isLoggedIn } = useAuth();
+
   return (
     <>
       {isLoggedIn ? (

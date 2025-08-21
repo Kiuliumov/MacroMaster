@@ -10,7 +10,7 @@ import CookieNotice from "./components/CookieNotice";
 import { setUser } from "./state_manager/userSlice";
 import { getJwtFromCookie } from "../authentication";
 
-import Homepage from "./pages/Homepage";
+import Homepage from "./pages/Home/Homepage";
 import About from "./pages/About/About";
 import CareersPage from "./pages/Careers/CareersPage";
 import PricingPage from "./pages/PricingPage";
@@ -41,7 +41,7 @@ function App() {
 		<>
 			<ScrollToTop />
 			<Toast />
-			< CookieNotice />
+			<CookieNotice />
 			<Navbar />
 
 			<Routes>
