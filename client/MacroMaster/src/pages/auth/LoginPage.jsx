@@ -26,11 +26,11 @@ export default function LoginPage() {
         throw new Error(data.detail || "Invalid credentials.");
       }
 
-      document.cookie = `access_token=${data.access}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
+      document.cookie = `access=${data.access}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
 
-      document.cookie = `refresh_token=${data.refresh}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`;
+      document.cookie = `refresh=${data.refresh}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`;
 
-      window.location.href = "/dashboard";
+      window.location.href = "/";
     } catch (err) {
       setError(err.message);
     }
