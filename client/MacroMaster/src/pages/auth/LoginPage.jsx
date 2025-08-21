@@ -20,7 +20,7 @@ export default function LoginPage() {
         credentials: "include",
         body: JSON.stringify({ username, password }),
       });
-      if (!res.ok) throw new Error("Invalid credentials");
+      if (!res.ok) throw new Error("Invalid credentials.");
       window.location.href = "/dashboard";
     } catch (err) {
       setError(err.message);
