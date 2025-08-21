@@ -1,4 +1,3 @@
-import React from "react";
 import { commonStyles } from "../commonStyles";
 
 export default function CardWrapper({ title, children }) {

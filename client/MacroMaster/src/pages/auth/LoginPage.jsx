@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { API_BASE_URL } from "../../config";
-import PasswordInput from "../../components/PasswordField";
+import PasswordInput from "./components/PasswordField";
 import CardWrapper from "./components/CardWrapper";
 import { commonStyles } from "./commonStyles";
 
