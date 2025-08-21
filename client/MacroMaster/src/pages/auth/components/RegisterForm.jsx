@@ -4,7 +4,7 @@ import FormInput from "./FormInput";
 import PasswordFields from "./PasswordFields";
 import { commonStyles } from "../commonStyles";
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
   const [form, setForm] = useState({
     username: "",
     email: "",
@@ -115,33 +115,8 @@ export default function RegisterForm() {
         return;
       }
 
-      if (!sessionStorage.getItem("autoLoggedIn")) {
-        const loginRes = await fetch(`${API_BASE_URL}/login/`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: form.username,
-            password: form.password,
-          }),
-        });
-
-        const loginData = await loginRes.json();
-
-        if (!loginRes.ok) {
-          throw new Error(loginData.detail || "Login failed");
-        }
-
-        document.cookie = `access=${loginData.access}; path=/; max-age=${
-          60 * 60 * 24
-        }; SameSite=Lax; Secure`;
-        document.cookie = `refresh=${loginData.refresh}; path=/; max-age=${
-          60 * 60 * 24 * 7
-        }; SameSite=Lax; Secure`;
-
-        sessionStorage.setItem("autoLoggedIn", "true");
-
-        window.location.href = "/";
-      }
+      // Trigger parent callback to show full success message
+      onSuccess();
     } catch (err) {
       setSubmitError(err.message);
     } finally {
