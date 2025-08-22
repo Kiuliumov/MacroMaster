@@ -25,7 +25,7 @@ export default function RegisterForm({ onSuccess }) {
   const [loading, setLoading] = useState(false);
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validateUsername = (username) => /^[A-Za-z]{3,}$/.test(username);
+  const validateUsername = (username) => /^[A-Za-z0-9]{3,}$/.test(username);
 
   const validateForm = (field, value) => {
     switch (field) {
@@ -34,7 +34,7 @@ export default function RegisterForm({ onSuccess }) {
           ...prev,
           username:
             value && !validateUsername(value)
-              ? "Username must be at least 3 letters and only English characters"
+              ? "Username must be at least 3 letters and only Latin characters and numbers."
               : "",
         }));
         break;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { logout } from "../state_manager/userSlice";
-import { addToast } from "../state_manager/toastSlice";
 import { Link } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
 import { Menu, X } from "lucide-react";
@@ -16,7 +15,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     dispatch(logout());
-    dispatch(addToast({ message: "Logout successful!", type: "success" }));
+    window.location.reload();
   };
 
   const [mobileOpen, setMobileOpen] = useState(false);

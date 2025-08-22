@@ -19,14 +19,14 @@ import SupportPage from "./pages/SupportPage";
 import FeaturesPage from "./pages/Features/FeaturesPage";
 import DashboardPage from "./pages/DashboardPage";
 
-
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 
 import ProtectedRoute from "./route_components/ProtectedRoute";
 import GuestRoute from "./route_components/GuestRoute";
-
+import ActivationSuccess from "./pages/auth/components/ActivationSuccess";
+import NotFoundPage from "./pages/NotFoundPage";
 function App() {
 	const dispatch = useDispatch();
 
@@ -52,7 +52,6 @@ function App() {
 				<Route path="/support" element={<SupportPage />} />
 				<Route path="/features" element={<FeaturesPage />} />
 				<Route path="/policy" element={<PrivacyPolicy />} />
-
 
 				<Route
 					path="/login"
@@ -87,6 +86,17 @@ function App() {
 						</ProtectedRoute>
 					}
 				/>
+
+				<Route
+					path="/activate/:uid/:token"
+					element={
+						<GuestRoute>
+							<ActivationSuccess />
+						</GuestRoute>
+					}
+				/>
+
+				<Route path="*" element={<NotFoundPage />} />	
 			</Routes>
 
 			<Footer />

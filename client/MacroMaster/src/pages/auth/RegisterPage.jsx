@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import CardWrapper from "./components/CardWrapper";
 import RegisterForm from "./components/RegisterForm";
-import SuccessMessage from "./components/SuccessMessage";
+import SuccessMessage from "./components/ActivateMessage";
 import { commonStyles } from "./commonStyles";
 
 export default function RegisterPage() {

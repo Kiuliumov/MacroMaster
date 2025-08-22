@@ -2,7 +2,7 @@ import React from "react";
 import CardWrapper from "./CardWrapper";
 import { commonStyles } from "../commonStyles";
 
-export default function SuccessMessage() {
+export default function ActivateMessage() {
   return (
     <CardWrapper title="Verify Your Email">
       <p className={commonStyles.textCenter}>
