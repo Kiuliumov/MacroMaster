@@ -47,4 +47,4 @@ class ProfileSerializer(serializers.ModelSerializer):
             'daily_calorie_goal', 'profile_picture', 'bio',
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['created_at', 'updated_at']
+        read_only_fields = ['username', 'email', 'created_at', 'updated_at']
