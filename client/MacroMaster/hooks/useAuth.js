@@ -8,14 +8,17 @@ export function useAuth() {
   const user = useSelector((state) => state.user.user);
   const token = getJwtFromCookie("access");
   const isLoggedIn = !!token;
+  const onboardingRequired = isLoggedIn && user && !user.onboardingCompleted;
 
   useEffect(() => {
-    if (token && !user?.token) {
-      dispatch(setUser({ token })); 
-    } else if (!token && user) {
+    if (token && !user) {
+      dispatch(setUser({ token, onboardingCompleted: false }));
+    }
+
+    if (!token && user) {
       dispatch(logout());
     }
   }, [token, user, dispatch]);
 
-  return { user, isLoggedIn, token };
+  return { user, isLoggedIn, token, onboardingRequired };
 }
