@@ -7,12 +7,11 @@ export default function PasswordField({
   onChange,
   placeholder,
   name,
-  compareValue, // optional, for password2
+  compareValue, 
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  // Live validation
   useEffect(() => {
     if (name === "password") {
       setError(

@@ -115,7 +115,6 @@ export default function RegisterForm({ onSuccess }) {
         return;
       }
 
-      // Trigger parent callback to show full success message
       onSuccess();
     } catch (err) {
       setSubmitError(err.message);
