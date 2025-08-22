@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import CardWrapper from "./CardWrapper";
 import { commonStyles } from "../commonStyles";
 import { setCookie } from "../../../../authentication";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../../../state_manager/userSlice";
+import { API_BASE_URL } from "../../../config"
 
 export default function ActivationSuccess() {
   const { uid, token } = useParams();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
   const [status, setStatus] = useState("loading"); 
-  const [errorMessage, setErrorMessage] = useState(""); // now used in JSX
-  const API_BASE_URL = "http://localhost:8000/api";
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   useEffect(() => {
     if (!uid || !token) {
@@ -36,6 +42,8 @@ export default function ActivationSuccess() {
           setCookie("refresh", data.refresh, 7);
         }
 
+        dispatch(setUser({ token: data.access }));
+
         setStatus("success");
       } catch (err) {
         setErrorMessage(err.errorMessage.toUpperCase());
@@ -44,20 +52,19 @@ export default function ActivationSuccess() {
     }
 
     activateAccount();
-  }, [uid, token]);
+  }, [uid, token, dispatch]);
 
   if (status === "loading") {
     return (
-      <div className={commonStyles.container}>
+      <CardWrapper title="Account Activation">
         <p className={commonStyles.textCenter}>Activating your account...</p>
-      </div>
+      </CardWrapper>
     );
   }
 
   if (status === "forbidden") {
     return (
-      <div className={commonStyles.container}>
-        <h1 className="text-6xl font-bold mb-4">403</h1>
+      <CardWrapper title="403 - Forbidden">
         <p className={commonStyles.textCenter} style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>
           🚫 {errorMessage}
         </p>
@@ -71,21 +78,22 @@ export default function ActivationSuccess() {
             Go to Login
           </a>
         </p>
-      </div>
+      </CardWrapper>
     );
   }
 
   return (
-    <div className={commonStyles.container}>
-      <h1 className="text-5xl font-bold mb-4">🎉 Account Activated!</h1>
+    <CardWrapper title="Account Activated">
       <p className={commonStyles.textCenter} style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>
-        Your account has been successfully activated! You are now logged in.
+        🎉 Your account has been successfully activated! You are now logged in.
       </p>
-      <p className={commonStyles.textCenter}>
-        <a href="/dashboard" className={commonStyles.link} style={{ fontSize: "1.25rem" }}>
-          Go to Dashboard
-        </a>
-      </p>
-    </div>
+      {isLoggedIn && (
+        <p className={commonStyles.textCenter}>
+          <a href="/dashboard" className={commonStyles.link} style={{ fontSize: "1.25rem" }}>
+            Go to Dashboard
+          </a>
+        </p>
+      )}
+    </CardWrapper>
   );
 }

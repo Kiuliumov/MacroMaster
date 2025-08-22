@@ -1,23 +1,14 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { logout } from "../state_manager/userSlice";
 import { Link } from "react-router-dom";
-import ThemeToggle from "./ThemeToggle";
 import { Menu, X } from "lucide-react";
 
 import Logo from "../components/Logo";
 import DesktopNav from "../components/DesktopNav";
 import AuthButtons from "../components/AuthButtons";
 import MobileMenu from "../components/MobileMenu";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Navbar() {
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    dispatch(logout());
-    window.location.reload();
-  };
-
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -32,10 +23,7 @@ export default function Navbar() {
 
           <div className="hidden md:flex items-center space-x-4">
             <ThemeToggle />
-            <AuthButtons
-              handleLogout={handleLogout}
-              LinkComponent={Link}
-            />
+            <AuthButtons LinkComponent={Link} />
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
@@ -54,13 +42,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {mobileOpen && (
-        <MobileMenu
-          handleLogout={handleLogout}
-          setMobileOpen={setMobileOpen}
-          LinkComponent={Link}
-        />
-      )}
+      {mobileOpen && <MobileMenu setMobileOpen={setMobileOpen} LinkComponent={Link} />}
     </header>
   );
 }

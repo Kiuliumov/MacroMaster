@@ -49,7 +49,8 @@ class ActivateAccountView(APIView):
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
 
-        if user and default_token_generator.check_token(user, token):
+        # Only allow activation if user exists AND is not already active
+        if user and not user.is_active and default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
             refresh = RefreshToken.for_user(user)
@@ -58,6 +59,7 @@ class ActivateAccountView(APIView):
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
             }, status=status.HTTP_200_OK)
+
         return Response({"error": "Invalid or expired link"}, status=status.HTTP_400_BAD_REQUEST)
 
 class LoginView(APIView):

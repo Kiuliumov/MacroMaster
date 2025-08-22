@@ -1,14 +1,11 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import { Routes, Route } from "react-router-dom";
 
 import Navbar from "./partials/Navbar";
 import Footer from "./partials/Footer";
 import Toast from "./components/Toast";
 import ScrollToTop from "./components/Scroller";
 import CookieNotice from "./components/CookieNotice";
-import { setUser } from "./state_manager/userSlice";
-import { getJwtFromCookie } from "../authentication";
 
 import Homepage from "./pages/Home/Homepage";
 import About from "./pages/About/About";
@@ -27,15 +24,10 @@ import ProtectedRoute from "./route_components/ProtectedRoute";
 import GuestRoute from "./route_components/GuestRoute";
 import ActivationSuccess from "./pages/auth/components/ActivationSuccess";
 import NotFoundPage from "./pages/NotFoundPage";
-function App() {
-	const dispatch = useDispatch();
+import { useAuth } from "../hooks/useAuth";
 
-	useEffect(() => {
-		const token = getJwtFromCookie();
-		if (token) {
-			dispatch(setUser({ token }));
-		}
-	}, [dispatch]);
+function App() {
+	useAuth();
 
 	return (
 		<>
@@ -90,9 +82,7 @@ function App() {
 				<Route
 					path="/activate/:uid/:token"
 					element={
-						<GuestRoute>
-							<ActivationSuccess />
-						</GuestRoute>
+						<ActivationSuccess />
 					}
 				/>
 

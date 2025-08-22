@@ -3,12 +3,15 @@ import NavLink from "../components/NavLink";
 import Button from "../components/Button";
 import { useEffect, useState, useRef } from "react";
 import Logo from "../components/Logo";
-import { useAuth } from "../../hooks/useAuth";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../state_manager/userSlice";
+import { addToast } from "../state_manager/toastSlice";
 
 const publicLinks = ["Home", "Features", "Pricing", "Forum", "About"];
 
-export default function MobileMenu({ handleLogout, setMobileOpen }) {
-  const { isLoggedIn } = useAuth();
+export default function MobileMenu({ setMobileOpen }) {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
   const firstRender = useRef(true);
@@ -31,6 +34,12 @@ export default function MobileMenu({ handleLogout, setMobileOpen }) {
   const closeMenu = () => {
     setShowMenu(false);
     setTimeout(() => setMobileOpen(false), 300);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(addToast({ message: "Logout successful!", type: "success" }));
+    closeMenu();
   };
 
   return (
@@ -76,11 +85,7 @@ export default function MobileMenu({ handleLogout, setMobileOpen }) {
               <Button className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-700">
                 <Link
                   to="/dashboard"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                  }}
+                  style={{ display: "block", width: "100%", textAlign: "center" }}
                 >
                   Dashboard
                 </Link>
@@ -97,11 +102,7 @@ export default function MobileMenu({ handleLogout, setMobileOpen }) {
               <Button className="w-full px-4 py-2 text-sm bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700">
                 <Link
                   to="/login"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                  }}
+                  style={{ display: "block", width: "100%", textAlign: "center" }}
                 >
                   Log In
                 </Link>
@@ -109,11 +110,7 @@ export default function MobileMenu({ handleLogout, setMobileOpen }) {
               <Button className="w-full px-4 py-2 text-sm bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600">
                 <Link
                   to="/register"
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                  }}
+                  style={{ display: "block", width: "100%", textAlign: "center" }}
                 >
                   Sign Up
                 </Link>

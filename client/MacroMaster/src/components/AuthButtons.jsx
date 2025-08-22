@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom";
 import Button from "./Button";
-import { useAuth } from "../../hooks/useAuth";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../state_manager/userSlice";
+import { addToast } from "../state_manager/toastSlice";
 
-export default function AuthButtons({ handleLogout }) {
-  const { isLoggedIn } = useAuth();
+export default function AuthButtons() {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    dispatch(addToast({ message: "Logout successful!", type: "success" }));
+  };
 
   return (
     <>
