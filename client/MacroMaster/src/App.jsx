@@ -1,5 +1,5 @@
-
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import Navbar from "./partials/Navbar";
 import Footer from "./partials/Footer";
@@ -27,71 +27,73 @@ import NotFoundPage from "./pages/NotFoundPage";
 import { useAuth } from "../hooks/useAuth";
 
 function App() {
-	useAuth();
+  const { onboardingRequired } = useAuth();
+  const navigate = useNavigate();
 
-	return (
-		<>
-			<ScrollToTop />
-			<Toast />
-			<CookieNotice />
-			<Navbar />
+  useEffect(() => {
+    if (!onboardingRequired) {
+      navigate("/onboarding");
+    }
+  }, [onboardingRequired, navigate]);
 
-			<Routes>
-				<Route path="/" element={<Homepage />} />
-				<Route path="/about" element={<About />} />
-				<Route path="/careers" element={<CareersPage />} />
-				<Route path="/pricing" element={<PricingPage />} />
-				<Route path="/support" element={<SupportPage />} />
-				<Route path="/features" element={<FeaturesPage />} />
-				<Route path="/policy" element={<PrivacyPolicy />} />
+  return (
+    <>
+      <ScrollToTop />
+      <Toast />
+      <CookieNotice />
+      <Navbar />
 
-				<Route
-					path="/login"
-					element={
-						<GuestRoute>
-							<LoginPage />
-						</GuestRoute>
-					}
-				/>
-				<Route
-					path="/register"
-					element={
-						<GuestRoute>
-							<RegisterPage />
-						</GuestRoute>
-					}
-				/>
-				<Route
-					path="/forgot-password"
-					element={
-						<GuestRoute>
-							<ForgotPasswordPage />
-						</GuestRoute>
-					}
-				/>
+      <Routes>
+        <Route path="/" element={<Homepage />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/careers" element={<CareersPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/support" element={<SupportPage />} />
+        <Route path="/features" element={<FeaturesPage />} />
+        <Route path="/policy" element={<PrivacyPolicy />} />
 
-				<Route
-					path="/dashboard"
-					element={
-						<ProtectedRoute>
-							<DashboardPage />
-						</ProtectedRoute>
-					}
-				/>
+        <Route
+          path="/login"
+          element={
+            <GuestRoute>
+              <LoginPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestRoute>
+              <RegisterPage />
+            </GuestRoute>
+          }
+        />
+        <Route
+          path="/forgot-password"
+          element={
+            <GuestRoute>
+              <ForgotPasswordPage />
+            </GuestRoute>
+          }
+        />
 
-				<Route
-					path="/activate/:uid/:token"
-					element={
-						<ActivationSuccess />
-					}
-				/>
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
 
-				<Route path="*" element={<NotFoundPage />} />	
-			</Routes>
+        <Route path="/activate/:uid/:token" element={<ActivationSuccess />} />
 
-			<Footer />
-		</>
-	);
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+
+      <Footer />
+    </>
+  );
 }
 
 export default App;
