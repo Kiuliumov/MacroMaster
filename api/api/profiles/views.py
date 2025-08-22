@@ -15,6 +15,7 @@ from rest_framework import generics, permissions
 from .models import Profile
 from .serializers import ProfileSerializer
 
+
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -38,7 +39,6 @@ class RegisterView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
 class ActivateAccountView(APIView):
     def get(self, request, uidb64, token):
         User = get_user_model()
@@ -49,7 +49,6 @@ class ActivateAccountView(APIView):
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None
 
-        # Only allow activation if user exists AND is not already active
         if user and not user.is_active and default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
@@ -61,6 +60,7 @@ class ActivateAccountView(APIView):
             }, status=status.HTTP_200_OK)
 
         return Response({"error": "Invalid or expired link"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class LoginView(APIView):
     def post(self, request):
@@ -84,6 +84,7 @@ class LoginView(APIView):
             })
 
         return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 class ProfileDetailView(generics.RetrieveAPIView):
