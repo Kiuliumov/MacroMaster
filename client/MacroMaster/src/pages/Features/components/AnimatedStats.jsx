@@ -12,7 +12,9 @@ export default function AnimatedStats({ stats }) {
         if (!startTime) startTime = timestamp;
         const progress = Math.min((timestamp - startTime) / duration, 1);
         setCounters((prev) =>
-          prev.map((val, i) => (i === index ? Math.floor(progress * target) : val))
+          prev.map((val, i) =>
+            i === index ? Math.floor(progress * target) : val
+          )
         );
         if (progress < 1) {
           requestAnimationFrame((ts) => step(ts, startTime));
@@ -40,8 +42,13 @@ export default function AnimatedStats({ stats }) {
   return (
     <div ref={ref} className="grid md:grid-cols-3 gap-6 text-center mt-16">
       {stats.map((stat, i) => (
-        <div key={i} className="p-6 bg-white dark:bg-gray-800 rounded-xl shadow">
-          <p className={`text-4xl font-extrabold ${stat.color}`}>{counters[i]}</p>
+        <div
+          key={i}
+          className="p-6 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg"
+        >
+          <p className={`text-4xl font-extrabold ${stat.color}`}>
+            {counters[i].toLocaleString()}
+          </p>
           <p className="text-gray-600 dark:text-gray-300 mt-2">{stat.label}</p>
         </div>
       ))}

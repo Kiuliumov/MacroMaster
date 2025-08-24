@@ -40,7 +40,6 @@ export default function LoginPage() {
 
 	return (
 		<div className={commonStyles.container}>
-			{/* Centered Gradient Blur */}
 			<div
 				className={commonStyles.loginGradientBlur}
 				style={{

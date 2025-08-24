@@ -19,36 +19,55 @@ export default function ForgotPasswordPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
       });
+
       if (!res.ok) {
         const data = await res.json();
         throw new Error(data.detail || "Failed to send email");
       }
-      setMessage("Password reset email sent. Check your inbox!");
+
+      setMessage("✅ Password reset email sent. Check your inbox!");
     } catch (err) {
       setError(err.message);
     }
   };
 
   return (
-    <CardWrapper title="Forgot Password">
-      {message && <p className={commonStyles.successText}>{message}</p>}
-      {error && <p className={commonStyles.errorText}>{error}</p>}
+    <div className={commonStyles.container}>
+      <div
+        className={commonStyles.loginGradientBlur}
+        style={{
+          background:
+            "linear-gradient(106.89deg, rgba(192, 132, 252, 0.2) 15.73%, rgba(14, 165, 233, 0.6) 15.74%, rgba(232, 121, 249, 0.35) 56.49%, rgba(79, 70, 229, 0.5) 115.91%)",
+        }}
+      />
 
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-          className={commonStyles.input}
-          required
-        />
-        <button type="submit" className={commonStyles.button}>Send Reset Email</button>
-      </form>
+      <div className="relative z-10 w-full max-w-md">
+        <CardWrapper title="Forgot Password">
+          {message && <p className={commonStyles.successText}>{message}</p>}
+          {error && <p className={commonStyles.errorText}>{error}</p>}
 
-      <p className={commonStyles.textCenter}>
-        Remember your password? <a href="/login" className={commonStyles.link}>Log in</a>
-      </p>
-    </CardWrapper>
+          <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              className={commonStyles.input}
+              required
+            />
+            <button type="submit" className={commonStyles.button}>
+              Send Reset Email
+            </button>
+          </form>
+
+          <p className={commonStyles.textCenter}>
+            Remember your password?{" "}
+            <a href="/login" className={commonStyles.link}>
+              Log in
+            </a>
+          </p>
+        </CardWrapper>
+      </div>
+    </div>
   );
 }

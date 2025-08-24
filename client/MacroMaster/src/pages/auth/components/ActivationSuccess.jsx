@@ -5,15 +5,15 @@ import { commonStyles } from "../commonStyles";
 import { setCookie } from "../../../../authentication";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../../../state_manager/userSlice";
-import { API_BASE_URL } from "../../../config"
+import { API_BASE_URL } from "../../../config";
 
 export default function ActivationSuccess() {
   const { uid, token } = useParams();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
-  const [status, setStatus] = useState("loading"); 
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [status, setStatus] = useState("loading");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!uid || !token) {
@@ -32,7 +32,9 @@ export default function ActivationSuccess() {
         const data = await res.json();
 
         if (!res.ok) {
-          setErrorMessage(data.error || "You do not have permission to activate this account.");
+          setErrorMessage(
+            data.error || "You do not have permission to activate this account."
+          );
           setStatus("forbidden");
           return;
         }
@@ -43,10 +45,9 @@ export default function ActivationSuccess() {
         }
 
         dispatch(setUser({ token: data.access }));
-
         setStatus("success");
       } catch (err) {
-        setErrorMessage(err.errorMessage.toUpperCase());
+        setErrorMessage(err.message || "Unexpected error");
         setStatus("forbidden");
       }
     }
@@ -54,46 +55,69 @@ export default function ActivationSuccess() {
     activateAccount();
   }, [uid, token, dispatch]);
 
+  const renderCard = (title, children) => (
+    <div className={commonStyles.container}>
+      <div
+        className={commonStyles.loginGradientBlur}
+        style={{
+          background:
+            "linear-gradient(106.89deg, rgba(192, 132, 252, 0.2) 15.73%, rgba(14, 165, 233, 0.6) 15.74%, rgba(232, 121, 249, 0.35) 56.49%, rgba(79, 70, 229, 0.5) 115.91%)",
+        }}
+      />
+
+      <div className="relative z-10 w-full max-w-md">
+        <CardWrapper title={title}>{children}</CardWrapper>
+      </div>
+    </div>
+  );
+
   if (status === "loading") {
-    return (
-      <CardWrapper title="Account Activation">
-        <p className={commonStyles.textCenter}>Activating your account...</p>
-      </CardWrapper>
+    return renderCard(
+      "Account Activation",
+      <p className={commonStyles.textCenter}>Activating your account...</p>
     );
   }
 
   if (status === "forbidden") {
-    return (
-      <CardWrapper title="403 - Forbidden">
-        <p className={commonStyles.textCenter} style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>
+    return renderCard(
+      "403 - Forbidden",
+      <>
+        <p
+          className={commonStyles.textCenter}
+          style={{ fontSize: "1.25rem", marginBottom: "1.5rem" }}
+        >
           🚫 {errorMessage}
         </p>
         <p className={commonStyles.textCenter}>
-          <a href="/register" className={commonStyles.link} style={{ fontSize: "1.25rem" }}>
+          <a href="/register" className={commonStyles.link}>
             Go back to Register
           </a>
         </p>
         <p className={commonStyles.textCenter}>
-          <a href="/login" className={commonStyles.link} style={{ fontSize: "1.25rem" }}>
+          <a href="/login" className={commonStyles.link}>
             Go to Login
           </a>
         </p>
-      </CardWrapper>
+      </>
     );
   }
 
-  return (
-    <CardWrapper title="Account Activated">
-      <p className={commonStyles.textCenter} style={{ fontSize: "1.5rem", marginBottom: "1.5rem" }}>
+  return renderCard(
+    "Account Activated",
+    <>
+      <p
+        className={commonStyles.textCenter}
+        style={{ fontSize: "1.25rem", marginBottom: "1.5rem" }}
+      >
         🎉 Your account has been successfully activated! You are now logged in.
       </p>
       {isLoggedIn && (
         <p className={commonStyles.textCenter}>
-          <a href="/dashboard" className={commonStyles.link} style={{ fontSize: "1.25rem" }}>
+          <a href="/dashboard" className={commonStyles.link}>
             Go to Dashboard
           </a>
         </p>
       )}
-    </CardWrapper>
+    </>
   );
 }
