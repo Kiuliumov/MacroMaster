@@ -1,6 +1,9 @@
 export const commonStyles = {
   container:
-    "min-h-screen flex flex-col items-center justify-center px-8 py-12 text-gray-900 dark:text-gray-100 bg-gradient-to-b from-gray-50 via-gray-100 to-gray-200 dark:from-gray-800 dark:via-gray-700 dark:to-gray-800",
+    "relative min-h-screen flex flex-col items-center justify-center px-6 sm:px-8 text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 pb-10",
+
+  gradientBlur:
+    "absolute inset-0 blur-[118px] max-w-4xl h-[900px] mx-auto sm:max-w-5xl sm:h-[500px]",
 
   headerWrapper: "text-center mb-12 max-w-3xl",
   pageTitle: "text-4xl md:text-5xl font-extrabold mb-4",
