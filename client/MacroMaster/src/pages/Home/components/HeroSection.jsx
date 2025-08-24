@@ -25,7 +25,7 @@ export default function HeroSection() {
             <Link to="/register" className={commonStyles.btnPrimary}>
               Get Started
             </Link>
-            <Link to="/login" className={commonStyles.btnSecondary}>
+            <Link to="/login" className={ "px-6 py-2 rounded-xl text-center border border-white text-white font-medium hover:bg-white hover:text-gray-900 transition-colors duration-300 shadow-md"}>
               Log In
             </Link>
           </>
