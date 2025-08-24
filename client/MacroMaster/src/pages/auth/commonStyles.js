@@ -2,8 +2,8 @@ export const commonStyles = {
   container:
     "relative min-h-screen flex flex-col items-center justify-center px-6 sm:px-8 text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 pb-10",
 
-  gradientBlur:
-    "absolute inset-0 blur-[118px] max-w-4xl h-[900px] mx-auto sm:max-w-5xl sm:h-[500px]",
+  loginGradientBlur:
+    "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] blur-[120px] rounded-full",
 
   card:
     "w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700",
