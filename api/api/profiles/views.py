@@ -103,7 +103,7 @@ class CheckRegisteredUsernames(APIView):
             return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Check if an active user exists with this username
-        if User.objects.filter(username=username, is_active=True).exists():
+        if User.objects.filter(username__iexact=username, is_active=True).exists():
             return Response({"detail": "Username already taken."}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"detail": "Username available."}, status=status.HTTP_200_OK)
