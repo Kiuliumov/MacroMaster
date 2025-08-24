@@ -7,21 +7,28 @@ export default function PasswordField({
   onChange,
   placeholder,
   name,
-  compareValue, 
+  compareValue,
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
+    let errorMessage = "";
+
     if (name === "password") {
-      setError(
-        value && value.length < 8
-          ? "Password must be at least 8 characters"
-          : ""
-      );
+      if (value && (value.length < 8 || !/[A-Za-z]/.test(value))) {
+        errorMessage =
+          value.length < 8
+            ? "Password must be at least 8 characters"
+            : "Password must contain at least one letter";
+      }
     } else if (name === "password2") {
-      setError(value && value !== compareValue ? "Passwords do not match" : "");
+      if (value && value !== compareValue) {
+        errorMessage = "Passwords do not match";
+      }
     }
+
+    setError(errorMessage);
   }, [value, compareValue, name]);
 
   return (

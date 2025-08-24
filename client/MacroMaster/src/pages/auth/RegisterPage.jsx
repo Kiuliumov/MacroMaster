@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import CardWrapper from "./components/CardWrapper";
 import RegisterForm from "./components/RegisterForm";
 import SuccessMessage from "./components/ActivateMessage";
