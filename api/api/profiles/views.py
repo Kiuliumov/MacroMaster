@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, User
 from rest_framework import generics, permissions
 from .models import Profile
 from .serializers import ProfileSerializer
@@ -93,3 +93,31 @@ class ProfileDetailView(generics.RetrieveAPIView):
 
     async def get_object(self):
         return await Profile.objects.select_related('user').aget(user=self.request.user)
+
+
+class CheckRegisteredUsernames(APIView):
+    def post(self, request, *args, **kwargs):
+        username = request.data.get('username')
+
+        if not username:
+            return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if an active user exists with this username
+        if User.objects.filter(username=username, is_active=True).exists():
+            return Response({"detail": "Username already taken."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"detail": "Username available."}, status=status.HTTP_200_OK)
+
+
+class CheckRegisteredEmails(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+
+        if not email:
+            return Response({"detail": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check if an active user exists with this email
+        if User.objects.filter(email=email, is_active=True).exists():
+            return Response({"detail": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response({"detail": "Email available."}, status=status.HTTP_200_OK)
