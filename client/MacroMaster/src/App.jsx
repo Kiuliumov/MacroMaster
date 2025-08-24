@@ -1,5 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { Routes, Route} from "react-router-dom";
 
 import Navbar from "./partials/Navbar";
 import Footer from "./partials/Footer";
@@ -10,7 +9,7 @@ import CookieNotice from "./components/CookieNotice";
 import Homepage from "./pages/Home/Homepage";
 import About from "./pages/About/About";
 import CareersPage from "./pages/Careers/CareersPage";
-import PricingPage from "./pages/PricingPage";
+import PricingPage from "./pages/Pricing/PricingPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import SupportPage from "./pages/SupportPage";
 import FeaturesPage from "./pages/Features/FeaturesPage";
@@ -27,15 +26,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import { useAuth } from "../hooks/useAuth";
 
 function App() {
-  const { onboardingRequired } = useAuth();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!onboardingRequired) {
-      navigate("/onboarding");
-    }
-  }, [onboardingRequired, navigate]);
-
+	useAuth();
   return (
     <>
       <ScrollToTop />
