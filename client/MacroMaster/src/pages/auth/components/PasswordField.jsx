@@ -8,6 +8,7 @@ export default function PasswordField({
   placeholder,
   name,
   compareValue,
+  setFieldErrors,
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -29,7 +30,14 @@ export default function PasswordField({
     }
 
     setError(errorMessage);
-  }, [value, compareValue, name]);
+
+    if (setFieldErrors) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        [name]: errorMessage ? "error" : "",
+      }));
+    }
+  }, [value, compareValue, name, setFieldErrors]);
 
   return (
     <div className="w-full">
