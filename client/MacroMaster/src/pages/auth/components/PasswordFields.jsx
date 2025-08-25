@@ -1,6 +1,14 @@
 import PasswordField from "./PasswordField";
 
-export default function PasswordFields({ form, handleChange }) {
+export default function PasswordFields({ form, setForm }) {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
   return (
     <>
       <PasswordField
