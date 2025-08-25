@@ -3,49 +3,55 @@ import FormInput from "./FormInput";
 import { validateEmail, checkEmailAvailable } from "../validation";
 import { commonStyles } from "../commonStyles";
 
-export default function EmailInput({ form, setForm, errors, setErrors }) {
+export default function EmailInput({ form = {}, setForm, setFieldErrors }) {
   const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
   const timeoutRef = useRef(null);
   const lastCallRef = useRef(0);
 
   const handleChange = (e) => {
-  const { value } = e.target;
-  setForm((prev) => ({ ...prev, email: value }));
+    const { value } = e.target;
+    setForm((prev) => ({ ...prev, email: value }));
 
-  if (!validateEmail(value)) {
-    setErrors((prev) => ({ ...prev, email: "Invalid email format" }));
-    return;
-  } else {
-    setErrors((prev) => ({ ...prev, email: "" }));
-  }
-
-  clearTimeout(timeoutRef.current);
-  timeoutRef.current = setTimeout(async () => {
-    const callId = Date.now();
-    lastCallRef.current = callId;
-
-    setChecking(true);
-    const available = await checkEmailAvailable(value);
-    setChecking(false);
-
-    if (lastCallRef.current === callId) {
-      setErrors((prev) => ({
-        ...prev,
-        email: available ? "" : "Email is already registered",
-      }));
+    if (!validateEmail(value)) {
+      setError("Invalid email format");
+      setFieldErrors && setFieldErrors((prev) => ({ ...prev, email: "error" }));
+      return;
+    } else {
+      setError("");
+      setFieldErrors && setFieldErrors((prev) => ({ ...prev, email: "" }));
     }
-  }, 500);
-};
+
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(async () => {
+      const callId = Date.now();
+      lastCallRef.current = callId;
+
+      setChecking(true);
+      const available = await checkEmailAvailable(value);
+      setChecking(false);
+
+      if (lastCallRef.current === callId) {
+        if (!available) {
+          setError("Email is already registered");
+          setFieldErrors && setFieldErrors((prev) => ({ ...prev, email: "taken" }));
+        } else {
+          setError("");
+          setFieldErrors && setFieldErrors((prev) => ({ ...prev, email: "" }));
+        }
+      }
+    }, 500);
+  };
 
   return (
     <div className="relative">
       <FormInput
         name="email"
         placeholder="Email"
-        value={form.email}
+        value={form.email || ""}
         onChange={handleChange}
         autoComplete="email"
-        error={errors.email}
+        error={error}
         className={commonStyles.input}
         required
       />
