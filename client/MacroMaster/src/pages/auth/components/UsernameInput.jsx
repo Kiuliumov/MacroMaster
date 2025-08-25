@@ -3,8 +3,9 @@ import FormInput from "./FormInput";
 import { validateUsername, checkUsernameAvailable } from "../validation";
 import { commonStyles } from "../commonStyles";
 
-export default function UsernameInput({ form, setForm, errors, setErrors }) {
+export default function UsernameInput({ form = {}, setForm, setFieldErrors }) {
   const [checking, setChecking] = useState(false);
+  const [error, setError] = useState("");
   const timeoutRef = useRef(null);
   const lastCallRef = useRef(0);
 
@@ -13,13 +14,14 @@ export default function UsernameInput({ form, setForm, errors, setErrors }) {
     setForm((prev) => ({ ...prev, username: value }));
 
     if (!validateUsername(value)) {
-      setErrors((prev) => ({
-        ...prev,
-        username: "Username must be at least 3 characters and only contain letters/numbers."
-      }));
-      return; 
+      setError(
+        "Username must be at least 3 characters and only contain letters/numbers."
+      );
+      setFieldErrors((prev) => ({ ...prev, username: "invalid" }));
+      return;
     } else {
-      setErrors((prev) => ({ ...prev, username: "" }));
+      setError("");
+      setFieldErrors((prev) => ({ ...prev, username: "" }));
     }
 
     clearTimeout(timeoutRef.current);
@@ -32,10 +34,13 @@ export default function UsernameInput({ form, setForm, errors, setErrors }) {
       setChecking(false);
 
       if (lastCallRef.current === callId) {
-        setErrors((prev) => ({
-          ...prev,
-          username: available ? "" : "Username is already taken"
-        }));
+        if (!available) {
+          setError("Username is already taken");
+          setFieldErrors((prev) => ({ ...prev, username: "taken" }));
+        } else {
+          setError("");
+          setFieldErrors((prev) => ({ ...prev, username: "" }));
+        }
       }
     }, 300);
   };
@@ -45,10 +50,10 @@ export default function UsernameInput({ form, setForm, errors, setErrors }) {
       <FormInput
         name="username"
         placeholder="Username"
-        value={form.username}
+        value={form.username || ""}
         onChange={handleChange}
         autoComplete="username"
-        error={errors.username}
+        error={error}
         className={commonStyles.input}
         required
       />
