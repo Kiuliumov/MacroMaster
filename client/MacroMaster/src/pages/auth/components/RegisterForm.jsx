@@ -16,12 +16,12 @@ export default function RegisterForm({ onSuccess }) {
     password2: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [fieldErrors, setFieldErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const hasErrors =
-    Object.values(errors).some(Boolean) ||
+    Object.values(fieldErrors).some(Boolean) || 
     !form.username ||
     !form.email ||
     !form.password ||
@@ -29,6 +29,8 @@ export default function RegisterForm({ onSuccess }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (hasErrors) return;
+
     setSubmitError("");
 
     try {
@@ -39,24 +41,30 @@ export default function RegisterForm({ onSuccess }) {
         body: JSON.stringify(form),
       });
 
-      const data = await res.json();
-
       if (!res.ok) {
-        const fieldErrors = {};
-        Object.keys(data).forEach((key) => {
-          fieldErrors[key] = Array.isArray(data[key])
-            ? data[key].join(", ")
-            : data[key];
-        });
-        setErrors((prev) => ({ ...prev, ...fieldErrors }));
+        const data = await res.json();
+        const firstError =
+          typeof data === "object" && Object.values(data)[0]
+            ? Array.isArray(Object.values(data)[0])
+              ? Object.values(data)[0][0]
+              : Object.values(data)[0]
+            : "Registration failed";
+        setSubmitError(firstError);
         return;
       }
 
       onSuccess();
-      setForm({ username: "", email: "", first_name: "", last_name: "", password: "", password2: "" });
-      setErrors({});
+      setForm({
+        username: "",
+        email: "",
+        first_name: "",
+        last_name: "",
+        password: "",
+        password2: "",
+      });
+      setFieldErrors({});
     } catch (err) {
-      setSubmitError(err.message || "An error occurred during registration.");
+      setSubmitError(err.message || "An error occurred");
     } finally {
       setLoading(false);
     }
@@ -64,14 +72,20 @@ export default function RegisterForm({ onSuccess }) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
-      {submitError && <p className="text-red-600 font-semibold mb-2">{submitError}</p>}
+      {submitError && (
+        <p className="text-red-600 font-semibold mb-2">{submitError}</p>
+      )}
 
-      <UsernameInput form={form} setForm={setForm} errors={errors} setErrors={setErrors} />
-      <EmailInput form={form} setForm={setForm} errors={errors} setErrors={setErrors} />
-      <NameFields form={form} setForm={setForm} />
-      <PasswordFields form={form} setForm={setForm} errors={errors} />
+      <UsernameInput form={form} setForm={setForm} setFieldErrors={setFieldErrors} />
+      <EmailInput form={form} setForm={setForm} setFieldErrors={setFieldErrors} />
+      <NameFields form={form} setForm={setForm} setFieldErrors={setFieldErrors} />
+      <PasswordFields form={form} setForm={setForm} setFieldErrors={setFieldErrors} />
 
-      <button type="submit" className={commonStyles.button} disabled={loading || hasErrors}>
+      <button
+        type="submit"
+        className={commonStyles.button}
+        disabled={loading || hasErrors}
+      >
         {loading ? "Registering..." : "Register"}
       </button>
     </form>
