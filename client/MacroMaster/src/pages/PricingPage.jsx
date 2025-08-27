@@ -1,4 +1,3 @@
-import React from "react";
 import AppleLogo from "../assets/apple_logo.png";
 import BananaLogo from "../assets/banana_logo.png";
 import PineappleLogo from "../assets/pineapple_logo.png";
