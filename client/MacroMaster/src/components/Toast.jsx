@@ -39,7 +39,7 @@ const ICONS = {
   ),
 };
 
-const BG_COLOR = "bg-gray-100 dark:bg-gray-800";
+const BG_COLOR = "bg-gray-800 text-white dark:bg-gray-500";
 
 const ICON_COLORS = {
   success: "text-green-500",
