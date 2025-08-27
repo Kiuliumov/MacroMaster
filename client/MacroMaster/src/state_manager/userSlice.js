@@ -18,6 +18,7 @@ export const userSlice = createSlice({
       state.isLoggedIn = false;
       document.cookie = "access=; Max-Age=0; path=/; SameSite=Lax";
       document.cookie = "refresh=; Max-Age=0; path=/; SameSite=Lax";
+
     },
   },
 });

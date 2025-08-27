@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import NavLink from "../components/NavLink";
 import Button from "../components/Button";
 import { useEffect, useState, useRef } from "react";
@@ -15,7 +15,7 @@ export default function MobileMenu({ setMobileOpen }) {
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
   const firstRender = useRef(true);
-
+  let navigate = useNavigate();
   useEffect(() => {
     const timeout = setTimeout(() => setShowMenu(true), 10);
     return () => clearTimeout(timeout);
@@ -39,6 +39,7 @@ export default function MobileMenu({ setMobileOpen }) {
   const handleLogout = () => {
     dispatch(logout());
     dispatch(addToast({ message: "Logout successful!", type: "success" }));
+    navigate('/');
     closeMenu();
   };
 
