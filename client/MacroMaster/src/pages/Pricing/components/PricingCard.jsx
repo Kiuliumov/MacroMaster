@@ -1,33 +1,29 @@
-import React from "react";
 import PriceButton from "./PricingButton";
+import { pricingStyles } from "../styles";
 
 export default function PricingCard({ tier }) {
-  const { name, price, features, logo, isMostPop } = tier;
-
-  const bgGradient = isMostPop
-    ? "bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700"
-    : "bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-700";
+  const { name, price, features, logo } = tier;
 
   return (
     <div
-      className={`relative flex-1 flex flex-col mt-6 border-2 sm:mt-0 sm:rounded-xl sm:max-w-md border-transparent shadow-lg ${bgGradient}`}
+      className={`${pricingStyles.cardWrapper} ${pricingStyles.cardBgGradient}`}
     >
-      <div className="p-6 py-8 border-b border-gray-200 dark:border-gray-700 md:p-8 flex flex-col items-center">
-        <img src={logo} alt={`${name} logo`} className="h-12 w-12 mb-4" />
-        <span className="text-gray-900 dark:text-white font-medium text-lg">{name}</span>
-        <div className="text-gray-900 dark:text-white text-3xl font-semibold">
-          ${price.toFixed(2)} <span className="text-xl font-normal">/mo</span>
+      <div className={pricingStyles.cardHeader}>
+        <img src={logo} alt={`${name} logo`} className={pricingStyles.cardLogo} />
+        <span className={pricingStyles.cardName}>{name}</span>
+        <div className={pricingStyles.cardPrice}>
+          ${price.toFixed(2)} <span className={pricingStyles.cardPriceUnit}>/mo</span>
         </div>
 
         <PriceButton />
       </div>
 
-      <ul className="p-6 py-8 space-y-3 md:p-8">
+      <ul className={pricingStyles.cardFeatures}>
         {features.map((feature, idx) => (
-          <li key={idx} className="flex items-center gap-3">
+          <li key={idx} className={pricingStyles.cardFeatureItem}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-gray-400 dark:text-gray-300"
+              className={pricingStyles.checkIcon}
               viewBox="0 0 20 20"
               fill="currentColor"
             >
