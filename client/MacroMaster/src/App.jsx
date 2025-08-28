@@ -19,6 +19,7 @@ function App() {
       <ScrollToTop />
       <Toast />
       <CookieNotice />
+      
       <Navbar />
 
       <Suspense fallback={<Loader />}>
