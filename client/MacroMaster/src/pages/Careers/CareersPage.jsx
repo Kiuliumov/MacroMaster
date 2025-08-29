@@ -2,6 +2,7 @@ import React from "react";
 import Logo from "../../components/Logo";
 import OpenPositions from "./components/OpenPositions";
 import { commonStyles } from "../../styles/commonStyles";
+import { careersStyles } from "./styles";
 
 const positions = [
   {
@@ -29,7 +30,6 @@ const positions = [
 export default function CareersPage() {
   return (
     <div className={commonStyles.container}>
-      {/* Gradient blur background */}
       <div
         className={commonStyles.gradientBlur}
         style={{
@@ -38,30 +38,24 @@ export default function CareersPage() {
         }}
       />
 
-      {/* Main content */}
-      <div className="relative max-w-5xl mx-auto space-y-12 flex flex-col items-center w-full z-10 px-4 sm:px-6">
-        <Logo className="h-16 w-16 mb-4" />
+      <div className={careersStyles.wrapper}>
+        <Logo className={careersStyles.logo} />
         
-        <h1 className="text-4xl md:text-5xl font-bold mb-3 text-center">
-          Join <span className="text-green-600 dark:text-green-400">The Cantina</span>
+        <h1 className={careersStyles.heading}>
+          Join <span className={careersStyles.headingHighlight}>The Cantina</span>
         </h1>
         
-        <p className="text-lg md:text-xl text-center max-w-3xl text-gray-700 dark:text-gray-300">
+        <p className={careersStyles.subheading}>
           Our developers are the cantina—brewing code, crafting features, and
           keeping the app running smoothly.
         </p>
 
-        <h2 className="text-3xl md:text-4xl font-semibold text-center">
-          Open Positions
-        </h2>
+        <h2 className={careersStyles.sectionTitle}>Open Positions</h2>
 
         <OpenPositions positions={positions} />
 
         <div className="text-center mt-6">
-          <a
-            href="mailto:careers@macromaster.com"
-            className="text-green-600 dark:text-green-400 font-medium hover:underline"
-          >
+          <a href="mailto:careers@macromaster.com" className={careersStyles.applyLink}>
             Apply via email
           </a>
         </div>
