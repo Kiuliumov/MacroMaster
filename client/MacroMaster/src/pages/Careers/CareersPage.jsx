@@ -1,4 +1,3 @@
-import React from "react";
 import Logo from "../../components/Logo";
 import OpenPositions from "./components/OpenPositions";
 import { commonStyles } from "../../styles/commonStyles";
@@ -55,7 +54,7 @@ export default function CareersPage() {
         <OpenPositions positions={positions} />
 
         <div className="text-center mt-6">
-          <a href="mailto:careers@macromaster.com" className={careersStyles.applyLink}>
+          <a href="mailto:ikiuliumov@gmail.com" className={careersStyles.applyLink}>
             Apply via email
           </a>
         </div>
