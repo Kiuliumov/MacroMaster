@@ -1,4 +1,3 @@
-import React from "react";
 import { Heart, Star, PieChart } from "lucide-react";
 import ValueCard from "./ValueCard";
 
