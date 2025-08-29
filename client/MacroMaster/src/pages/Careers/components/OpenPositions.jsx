@@ -1,5 +1,5 @@
 import CareerCard from "./CareerCard";
-import "./OpenPositions.css";
+import "../OpenPositions.css";
 import { careersStyles } from "../styles";
 
 export default function OpenPositions({ positions }) {
