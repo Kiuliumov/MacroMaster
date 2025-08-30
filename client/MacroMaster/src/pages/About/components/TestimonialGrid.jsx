@@ -1,4 +1,5 @@
 import TestimonialCard from "./TestimonialCard";
+import { styles } from "../styles";
 
 export default function TestimonialsGrid() {
   const testimonials = [
@@ -7,9 +8,9 @@ export default function TestimonialsGrid() {
   ];
 
   return (
-    <div className="mt-16 max-w-5xl w-full text-center">
-      <h2 className="text-3xl font-bold mb-8">What Users Say</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className={styles.testimonialsGrid.container}>
+      <h2 className={styles.testimonialsGrid.heading}>What Users Say</h2>
+      <div className={styles.testimonialsGrid.grid}>
         {testimonials.map((t, idx) => (
           <TestimonialCard key={idx} {...t} />
         ))}
