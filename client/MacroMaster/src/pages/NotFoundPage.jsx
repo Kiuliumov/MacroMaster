@@ -3,8 +3,7 @@ import { commonStyles } from "../styles/commonStyles";
 
 export default function NotFoundPage() {
   return (
-    <div className={`${commonStyles.container} grid place-items-center`}>
-      {/* Gradient blur background */}
+    <main className={`${commonStyles.container} grid place-items-center`}>
       <div
         className={commonStyles.gradientBlur}
         style={{
@@ -27,6 +26,6 @@ export default function NotFoundPage() {
           Go back to Homepage
         </a>
       </div>
-    </div>
+    </main>
   );
 }

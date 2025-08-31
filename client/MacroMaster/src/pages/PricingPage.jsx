@@ -40,7 +40,7 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <section className="relative py-14 bg-gray-50 dark:bg-gray-900">
+    <main className="relative py-14 bg-gray-50 dark:bg-gray-900">
       <div
         className="absolute inset-0 blur-[118px] max-w-lg h-[800px] mx-auto sm:max-w-3xl sm:h-[400px]"
         style={{
@@ -104,6 +104,6 @@ export default function PricingPage() {
           ))}
         </div>
       </div>
-    </section>
+    </main>
   );
 }

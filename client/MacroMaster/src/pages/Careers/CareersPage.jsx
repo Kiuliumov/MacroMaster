@@ -28,7 +28,7 @@ const positions = [
 
 export default function CareersPage() {
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.gradientBlur}
         style={{
@@ -59,6 +59,6 @@ export default function CareersPage() {
           </a>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

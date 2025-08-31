@@ -1,9 +1,17 @@
-import { commonStyles } from "../styles/commonStyles"
+import { commonStyles } from "../styles/commonStyles";
 
 export default function PrivacyPolicy() {
   return (
-    <div className={commonStyles.container}>
-      <div className="max-w-4xl mx-auto">
+    <main className={`${commonStyles.container} relative py-14 bg-gray-50 dark:bg-gray-500 overflow-hidden`}>
+      <div
+        className="absolute inset-0 blur-[118px] max-w-lg h-[800px] mx-auto sm:max-w-3xl sm:h-[400px]"
+        style={{
+          background:
+            "linear-gradient(106.89deg, rgba(192, 132, 252, 0.11) 15.73%, rgba(14, 165, 233, 0.41) 15.74%, rgba(232, 121, 249, 0.26) 56.49%, rgba(79, 70, 229, 0.4) 115.91%)",
+        }}
+      />
+
+      <div className="relative max-w-4xl mx-auto">
         <h1 className="text-5xl font-extrabold mb-8 text-center text-blue-500 drop-shadow-sm">
           Privacy Policy
         </h1>
@@ -67,6 +75,6 @@ export default function PrivacyPolicy() {
           <span className="font-semibold">support@macromaster.com</span>.
         </p>
       </div>
-    </div>
+    </main>
   );
 }

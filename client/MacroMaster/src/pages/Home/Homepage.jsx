@@ -4,7 +4,7 @@ import FeaturesSection from "./components/FeaturesSection";
 
 export default function Homepage() {
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.gradientBlur}
         style={{
@@ -17,6 +17,6 @@ export default function Homepage() {
         <HeroSection />
         <FeaturesSection />
       </div>
-    </div>
+    </main>
   );
 }

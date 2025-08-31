@@ -1,4 +1,3 @@
-import React from "react";
 import PricingCard from "./components/PricingCard";
 import AppleLogo from "../../assets/apple_logo.png";
 import BananaLogo from "../../assets/banana_logo.png";
@@ -43,7 +42,7 @@ const tiers = [
 
 export default function PricingPage() {
   return (
-    <section className={pricingStyles.section}>
+    <main className={pricingStyles.section}>
       <div
         className={pricingStyles.gradientBlur}
         style={{
@@ -67,6 +66,6 @@ export default function PricingPage() {
           ))}
         </div>
       </div>
-    </section>
+    </main>
   );
 }

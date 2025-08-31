@@ -4,7 +4,7 @@ import { supportStyles } from "./styles";
 
 export default function SupportPage() {
   return (
-    <div className={supportStyles.container}>
+    <main className={supportStyles.container}>
       <div
         className={supportStyles.gradientBlur}
         style={{
@@ -25,6 +25,6 @@ export default function SupportPage() {
         <ContactForm />
         <OfficeLocation />
       </div>
-    </div>
+    </main>
   );
 }

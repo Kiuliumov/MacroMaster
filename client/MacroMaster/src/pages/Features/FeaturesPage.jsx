@@ -1,4 +1,3 @@
-import React from "react";
 import {
   FireIcon,
   HeartIcon,
@@ -40,7 +39,7 @@ export default function FeaturesPage() {
   ];
 
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.gradientBlur}
         style={{
@@ -78,6 +77,6 @@ export default function FeaturesPage() {
           />
         </div>
       </div>
-    </div>
+    </main>
   );
 }
