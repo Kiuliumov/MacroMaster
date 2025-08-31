@@ -1,6 +1,6 @@
 export const commonStyles = {
   container:
-    "relative min-h-screen flex flex-col items-center justify-center px-6 sm:px-8 text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 pb-10",
+    "relative min-h-screen flex flex-col items-center justify-center px-6 sm:px-8 text-gray-900 dark:text-gray-100 bg-gray-100 dark:bg-gray-800 pb-10 pt-10",
 
   gradientBlur:
     "absolute inset-0 blur-[118px] max-w-4xl h-[900px] mx-auto sm:max-w-5xl sm:h-[500px]",
