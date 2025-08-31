@@ -32,7 +32,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.loginGradientBlur}
         style={{
@@ -68,6 +68,6 @@ export default function ForgotPasswordPage() {
           </p>
         </CardWrapper>
       </div>
-    </div>
+    </main>
   );
 }
