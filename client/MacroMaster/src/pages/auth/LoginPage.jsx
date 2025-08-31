@@ -30,7 +30,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.loginGradientBlur}
         style={{
@@ -75,6 +75,6 @@ export default function LoginPage() {
           </p>
         </CardWrapper>
       </div>
-    </div>
+    </main>
   );
 }
