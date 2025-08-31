@@ -10,7 +10,7 @@ export default function RegisterPage() {
   if (success) return <SuccessMessage />;
 
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.loginGradientBlur} 
         style={{
@@ -30,6 +30,6 @@ export default function RegisterPage() {
           </p>
         </CardWrapper>
       </div>
-    </div>
+    </main>
   );
 }
