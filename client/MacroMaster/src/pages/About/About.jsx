@@ -9,7 +9,7 @@ import { styles } from "./styles";
 
 export default function About() {
   return (
-    <div className={commonStyles.container}>
+    <main className={commonStyles.container}>
       <div
         className={commonStyles.gradientBlur}
         style={styles.about.gradientBlur}
@@ -23,6 +23,6 @@ export default function About() {
         <TestimonialsGrid />
         <CTA />
       </div>
-    </div>
+    </main>
   );
 }
