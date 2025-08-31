@@ -19,17 +19,13 @@ export function useLogin() {
         throw new Error(data.detail || "Invalid credentials.");
       }
 
-      document.cookie = `access=${data.access}; path=/; max-age=${
-        60 * 60 * 24
-      }; SameSite=Lax; Secure`;
-      document.cookie = `refresh=${data.refresh}; path=/; max-age=${
-        60 * 60 * 24 * 7
-      }; SameSite=Lax; Secure`;
+      document.cookie = `access=${data.access}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
+      document.cookie = `refresh=${data.refresh}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`;
 
-      return true;
+      return data.user;
     } catch (err) {
       setError(err.message);
-      return false;
+      return null;
     }
   };
 

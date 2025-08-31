@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToast } from "../../state_manager/toastSlice";
-
+import { setUser } from "../../state_manager/userSlice";
 import CardWrapper from "./components/CardWrapper";
 import { commonStyles } from "./commonStyles";
 import { useLogin } from "../../../hooks/useLogin";
@@ -12,7 +12,6 @@ export default function LoginPage() {
   const passwordRef = useRef(null);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const { login, error } = useLogin();
 
   const handleSubmit = async (e) => {
@@ -21,9 +20,11 @@ export default function LoginPage() {
     const username = usernameRef.current.value;
     const password = passwordRef.current.value;
 
-    const success = await login(username, password);
+    const user = await login(username, password);
 
-    if (success) {
+    if (user) {
+      dispatch(setUser(user));
+      console.log(user);
       dispatch(addToast({ message: "Login successful!", type: "success" }));
       navigate("/");
     }
