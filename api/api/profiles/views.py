@@ -67,7 +67,7 @@ class LoginView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(request, username=username, password=password)
-
+        profile = Profile.objects.get(user=user)
         if user:
             refresh = RefreshToken.for_user(user)
             return Response({
@@ -77,8 +77,17 @@ class LoginView(APIView):
                     "first_name": user.first_name,
                     "last_name": user.last_name,
                     "is_staff": user.is_staff,
-                    "is_superuser": user.is_superuser
+                    "is_superuser": user.is_superuser,
                 },
+
+                "stats": {
+                    "bmi": profile.bmi,
+                    "weight_difference": profile.weight_diff,
+                    "calorie_goal": profile.daily_calorie_goal,
+                    "current_weight": profile.weight_kg,
+                    "target_weight": profile.target_weight_kg,
+                },
+
                 "access": str(refresh.access_token),
                 "refresh": str(refresh)
             })
