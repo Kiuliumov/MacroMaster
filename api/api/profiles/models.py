@@ -44,3 +44,31 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
+
+    @property
+    def bmi(self):
+        if self.height_cm and self.weight_kg:
+            height_m = self.height_cm / 100
+            return round(self.weight_kg / (height_m ** 2), 2)
+        return None
+
+    @property
+    def weight_diff(self):
+        if self.weight_kg is not None and self.target_weight_kg is not None:
+            return round(self.target_weight_kg - self.weight_kg, 2)
+        return None
+
+    @property
+    def stats(self):
+        return {
+            "age": self.age,
+            "gender": self.gender,
+            "height_cm": self.height_cm,
+            "current_weight": self.weight_kg,
+            "target_weight": self.target_weight_kg,
+            "weight_difference": self.weight_diff,
+            "bmi": self.bmi,
+            "activity_level": self.activity_level,
+            "goal": self.goal,
+            "calorie_goal": self.daily_calorie_goal,
+        }
