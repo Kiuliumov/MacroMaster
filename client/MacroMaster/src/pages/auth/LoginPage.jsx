@@ -24,7 +24,6 @@ export default function LoginPage() {
 
     if (user) {
       dispatch(setUser(user));
-      console.log(user);
       dispatch(addToast({ message: "Login successful!", type: "success" }));
       navigate("/");
     }
