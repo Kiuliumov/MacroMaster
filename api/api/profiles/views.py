@@ -96,7 +96,6 @@ class ProfileDetailView(generics.RetrieveAPIView):
     async def get_object(self):
         return await Profile.objects.select_related('user').aget(user=self.request.user)
 
-
 class CheckRegisteredUsernames(APIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -123,3 +122,25 @@ class CheckRegisteredEmails(APIView):
             return Response({"detail": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"detail": "Email available."}, status=status.HTTP_200_OK)
+
+
+class MeView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({
+            "user": {
+                "username": request.user.username,
+                "email": request.user.email,
+                "first_name": request.user.first_name,
+                "last_name": request.user.last_name,
+                "is_staff": request.user.is_staff,
+                "is_superuser": request.user.is_superuser,
+                "stats": profile.stats,
+            }
+        }, status=status.HTTP_200_OK)
