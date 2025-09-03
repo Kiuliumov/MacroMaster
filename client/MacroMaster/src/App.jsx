@@ -17,7 +17,7 @@ function App() {
       <ScrollToTop />
       <Toast />
       <CookieNotice />
-      {/* <OnboardingCheck /> */}
+      <OnboardingCheck />
 
       <Suspense fallback={<Loader />}>
         <Routes>
