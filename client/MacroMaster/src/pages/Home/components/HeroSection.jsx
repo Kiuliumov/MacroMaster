@@ -23,7 +23,7 @@ export default function HeroSection() {
   }
 
   const caloriesConsumed = user?.stats?.calories_today ?? 0;
-  const calorieGoal = user?.stats?.calorie_goal ?? 1; // avoid division by zero
+  const calorieGoal = user?.stats?.calorie_goal ?? 1;
   const calorieProgress = Math.min((caloriesConsumed / calorieGoal) * 100, 100);
 
   return (
