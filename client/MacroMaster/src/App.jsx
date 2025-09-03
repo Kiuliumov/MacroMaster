@@ -2,13 +2,11 @@ import { Routes, Route } from "react-router-dom";
 import { Suspense } from "react";
 import routes from "./routes";
 
-import Navbar from "./partials/Navbar";
-import Footer from "./partials/Footer";
 import Toast from "./components/Toast";
 import ScrollToTop from "./components/Scroller";
 import CookieNotice from "./components/CookieNotice";
 import Loader from "./components/Loader";
-
+import OnboardingCheck from "./components/OnBoardingCheck";
 import { useAuth } from "../hooks/useAuth";
 
 function App() {
@@ -19,18 +17,16 @@ function App() {
       <ScrollToTop />
       <Toast />
       <CookieNotice />
-      
-      <Navbar />
+      {/* <OnboardingCheck /> */}
 
       <Suspense fallback={<Loader />}>
         <Routes>
-          {routes.map(({ path, element }) => (
-            <Route key={path} path={path} element={element} />
-          ))}
+          {routes.map(({ path, element, layout: Layout }) => {
+            const wrappedElement = Layout ? <Layout>{element}</Layout> : element;
+            return <Route key={path} path={path} element={wrappedElement} />;
+          })}
         </Routes>
       </Suspense>
-
-      <Footer />
     </>
   );
 }
