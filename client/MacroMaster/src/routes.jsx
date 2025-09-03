@@ -1,6 +1,8 @@
 import { lazy } from "react";
 import ProtectedRoute from "./route_components/ProtectedRoute";
 import GuestRoute from "./route_components/GuestRoute";
+import RegularLayout from "./layouts/RegularLayout";
+import SiteLayout from "./layouts/SiteLayout";
 
 // --- Public Pages ---
 const Homepage = lazy(() => import("./pages/Home/Homepage"));
@@ -13,8 +15,8 @@ const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 // --- Auth Pages ---
-const LoginPage = lazy(() => import("./pages/auth/LoginPage"));
-const RegisterPage = lazy(() => import("./pages/auth/RegisterPage"));
+const LoginPage = lazy(() => import("./pages/Auth/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/Auth/RegisterPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/auth/ForgotPasswordPage"));
 const ActivationSuccess = lazy(() => import("./pages/auth/components/ActivationSuccess"));
 
@@ -22,27 +24,29 @@ const ActivationSuccess = lazy(() => import("./pages/auth/components/ActivationS
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 
 // --- Route Config ---
+
 const routes = [
   // Public routes
-  { path: "/", element: <Homepage /> },
-  { path: "/about", element: <About /> },
-  { path: "/careers", element: <CareersPage /> },
-  { path: "/pricing", element: <PricingPage /> },
-  { path: "/support", element: <SupportPage /> },
-  { path: "/features", element: <FeaturesPage /> },
-  { path: "/policy", element: <PrivacyPolicy /> },
+  { path: "/", element: <Homepage />, layout: SiteLayout },
+  { path: "/about", element: <About />, layout: SiteLayout },
+  { path: "/careers", element: <CareersPage />, layout: SiteLayout },
+  { path: "/pricing", element: <PricingPage />, layout: SiteLayout },
+  { path: "/support", element: <SupportPage />, layout: SiteLayout },
+  { path: "/features", element: <FeaturesPage />, layout: SiteLayout },
+  { path: "/policy", element: <PrivacyPolicy />, layout: SiteLayout },
 
   // Auth routes (guest only)
-  { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute> },
-  { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute> },
-  { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute> },
-  { path: "/activate/:uid/:token", element: <ActivationSuccess /> },
+  { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute>, layout: RegularLayout },
+  { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute>, layout: RegularLayout },
+  { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute>, layout: RegularLayout },
+  { path: "/activate/:uid/:token", element: <ActivationSuccess />, layout: RegularLayout },
 
   // Protected routes
-  { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute> },
+  { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute>, layout: SiteLayout },
 
   // Catch-all
-  { path: "*", element: <NotFoundPage /> },
+  { path: "*", element: <NotFoundPage />, layout: SiteLayout },
 ];
+
 
 export default routes;
