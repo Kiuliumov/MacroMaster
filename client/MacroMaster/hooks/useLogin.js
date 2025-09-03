@@ -22,7 +22,7 @@ export function useLogin() {
       document.cookie = `access=${data.access}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
       document.cookie = `refresh=${data.refresh}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`;
 
-      return data.user;
+      return { ...data.user, token: data.access };
     } catch (err) {
       setError(err.message);
       return null;
