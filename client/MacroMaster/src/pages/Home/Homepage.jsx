@@ -1,8 +1,10 @@
 import { commonStyles } from "../../styles/commonStyles";
 import HeroSection from "./components/HeroSection";
 import FeaturesSection from "./components/FeaturesSection";
+import { useAuth } from "../../../hooks/useAuth";
 
 export default function Homepage() {
+  const { isLoggedIn } = useAuth(); 
   return (
     <main className={commonStyles.container}>
       <div
@@ -15,7 +17,7 @@ export default function Homepage() {
 
       <div className="relative max-w-5xl mx-auto space-y-20 flex flex-col items-center">
         <HeroSection />
-        <FeaturesSection />
+        {!isLoggedIn && <FeaturesSection />}
       </div>
     </main>
   );
