@@ -8,73 +8,80 @@ import { commonStyles } from "./commonStyles";
 import { useLogin } from "../../../hooks/useLogin";
 
 export default function LoginPage() {
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { login, error } = useLogin();
+	const usernameRef = useRef(null);
+	const passwordRef = useRef(null);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { login, error } = useLogin();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 
-    const username = usernameRef.current.value;
-    const password = passwordRef.current.value;
+		const username = usernameRef.current.value;
+		const password = passwordRef.current.value;
 
-    const user = await login(username, password);
+		const user = await login(username, password);
 
-    if (user) {
-      dispatch(setUser(user));
-      dispatch(addToast({ message: "Login successful!", type: "success" }));
-      navigate("/");
-    }
-  };
+		if (user) {
+			dispatch(setUser(user));
+			dispatch(addToast({ message: "Login successful!", type: "success" }));
+			navigate("/");
+		}
+	};
 
-  return (
-    <main className={commonStyles.container}>
-      <div
-        className={commonStyles.loginGradientBlur}
-        style={{
-          background:
-            "linear-gradient(106.89deg, rgba(192, 132, 252, 0.2) 15.73%, rgba(14, 165, 233, 0.6) 15.74%, rgba(232, 121, 249, 0.35) 56.49%, rgba(79, 70, 229, 0.5) 115.91%)",
-        }}
-      />
+	return (
+		<main className={commonStyles.container}>
+			<div
+				className={commonStyles.loginGradientBlur}
+				style={{
+					background:
+						"linear-gradient(106.89deg, rgba(192, 132, 252, 0.2) 15.73%, rgba(14, 165, 233, 0.6) 15.74%, rgba(232, 121, 249, 0.35) 56.49%, rgba(79, 70, 229, 0.5) 115.91%)",
+				}}
+			/>
 
-      <div className="relative z-10 w-full max-w-md">
-        <CardWrapper title="Login">
-          {error && <p className={commonStyles.errorText}>{error}</p>}
+			<div className="relative z-10 w-full max-w-md">
+				<CardWrapper title="Login">
+					{error && <p className={commonStyles.errorText}>{error}</p>}
 
-          <form onSubmit={handleSubmit} className="flex flex-col space-y-5">
-            <input
-              type="text"
-              ref={usernameRef}
-              placeholder="Username"
-              autoComplete="username"
-              className={commonStyles.input}
-              required
-            />
+					<form onSubmit={handleSubmit} className="flex flex-col space-y-5">
+						<input
+							type="text"
+							ref={usernameRef}
+							placeholder="Username"
+							autoComplete="username"
+							className={commonStyles.input}
+							required
+						/>
 
-            <input
-              type="password"
-              ref={passwordRef}
-              placeholder="Password"
-              autoComplete="current-password"
-              className={commonStyles.input}
-              required
-            />
+						<input
+							type="password"
+							ref={passwordRef}
+							placeholder="Password"
+							autoComplete="current-password"
+							className={commonStyles.input}
+							required
+						/>
 
-            <button type="submit" className={commonStyles.button}>
-              Log In
-            </button>
-          </form>
+						<button type="submit" className={commonStyles.button}>
+							Log In
+						</button>
+					</form>
 
-          <p className={commonStyles.textCenter}>
-            Don’t have an account?{" "}
-            <Link to="/register" className={commonStyles.link}>
-              Sign up
-            </Link>
-          </p>
-        </CardWrapper>
-      </div>
-    </main>
-  );
+					<p className={commonStyles.textCenter}>
+						Don’t have an account?{" "}
+						<Link to="/register" className={commonStyles.link}>
+							Sign up
+						</Link>
+					</p>
+
+					<p className={commonStyles.textCenter}>
+						<Link to="/forgot-password" className={commonStyles.link}>
+							Forgot your password?
+						</Link>
+					</p>
+
+				</CardWrapper>
+			</div>
+		</main>
+	);
 }
