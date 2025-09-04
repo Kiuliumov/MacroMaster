@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, User
+from .serializers import RegisterSerializer, User, ResetPasswordSerializer, ForgotPasswordSerializer
 from rest_framework import generics, permissions
 from .models import Profile
 from .serializers import ProfileSerializer
@@ -107,7 +107,6 @@ class CheckRegisteredUsernames(APIView):
         if not username:
             return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if an active user exists with this username
         if User.objects.filter(username__iexact=username, is_active=True).exists():
             return Response({"detail": "Username already taken."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -121,7 +120,6 @@ class CheckRegisteredEmails(APIView):
         if not email:
             return Response({"detail": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Check if an active user exists with this email
         if User.objects.filter(email=email, is_active=True).exists():
             return Response({"detail": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -149,4 +147,36 @@ class MeView(APIView):
             }
         }, status=status.HTTP_200_OK)
 
-class ForgotPasswordView()
+class ForgotPasswordView(APIView):
+    def post(self, request):
+        serializer = ForgotPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data["email"]
+            user = User.objects.get(email=email)
+
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+
+            reset_link = f"http://localhost:5173/reset-password/{uid}/{token}/"
+
+            subject = "Password Reset Request"
+            message = f"Hi {user.username},\n\nClick the link below to reset your password:\n{reset_link}\n\nIf you didn’t request this, you can safely ignore this email."
+            send_mail(subject, message, None, [user.email])
+
+            return Response(
+                {"message": "Password reset link sent to your email."},
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ResetPasswordView(APIView):
+    def post(self, request):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Password has been reset successfully."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
