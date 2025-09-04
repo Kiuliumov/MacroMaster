@@ -14,7 +14,11 @@ from .serializers import RegisterSerializer, User
 from rest_framework import generics, permissions
 from .models import Profile
 from .serializers import ProfileSerializer
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
+token_generator = PasswordResetTokenGenerator()
 
 class RegisterView(APIView):
     def post(self, request):
@@ -144,3 +148,5 @@ class MeView(APIView):
                 "stats": profile.stats,
             }
         }, status=status.HTTP_200_OK)
+
+class ForgotPasswordView()
