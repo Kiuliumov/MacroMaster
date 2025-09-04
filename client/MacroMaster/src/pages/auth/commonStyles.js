@@ -7,7 +7,7 @@ export const commonStyles = {
 
   card:
     "w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700",
-  title: "text-3xl md:text-4xl font-bold mb-6 text-center",
+  title: "text-3xl md:text-4xl dark:text-gray-100 font-bold mb-6 text-center",
   link: "text-green-600 dark:text-green-400 hover:underline font-medium",
   textCenter: "text-center text-sm text-gray-600 dark:text-gray-400 mt-6",
   input:
