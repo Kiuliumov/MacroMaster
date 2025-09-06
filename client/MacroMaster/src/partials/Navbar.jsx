@@ -33,7 +33,7 @@ export default function Navbar() {
 
           <div className={styles.desktopActions}>
             <ThemeToggle />
-            <AuthButtons LinkComponent={Link} />
+            <AuthButtons />
           </div>
 
           <div className={styles.mobileActions}>
