@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CardWrapper from "./components/CardWrapper";
-import RegisterForm from "./components/RegisterForm";
+import RegisterForm from "./components/RegisterForm"; 
+import { Link } from "react-router-dom";
 import SuccessMessage from "./components/ActivateMessage";
 import { commonStyles } from "./commonStyles";
 
@@ -24,9 +25,9 @@ export default function RegisterPage() {
           <RegisterForm onSuccess={() => setSuccess(true)} />
           <p className={commonStyles.textCenter}>
             Already have an account?{" "}
-            <a href="/login" className={commonStyles.link}>
+            <Link to="/login" className={commonStyles.link}>
               Log in
-            </a>
+            </Link>
           </p>
         </CardWrapper>
       </div>
