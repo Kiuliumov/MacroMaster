@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addToast } from "../../state_manager/toastSlice";
-import { setUser } from "../../state_manager/userSlice";
+import { setUser } from "../../state_manager/userSlice"; 
 import CardWrapper from "./components/CardWrapper";
 import { commonStyles } from "./commonStyles";
 import { useLogin } from "../../../hooks/useLogin";
