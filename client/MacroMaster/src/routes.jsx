@@ -36,10 +36,10 @@ const routes = [
   { path: "/policy", element: <PrivacyPolicy />, layout: SiteLayout },
 
   // Auth routes (guest only)
-  { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute>, layout: RegularLayout },
-  { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute>, layout: RegularLayout },
-  { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute>, layout: RegularLayout },
-  { path: "/activate/:uid/:token", element: <ActivationSuccess />, layout: RegularLayout },
+  { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute>, layout: SiteLayout },
+  { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute>, layout: SiteLayout},
+  { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute>, layout: SiteLayout },
+  { path: "/activate/:uid/:token", element: <ActivationSuccess />, layout: SiteLayout },
 
   // Protected routes
   { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute>, layout: SiteLayout },
