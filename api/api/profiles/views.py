@@ -180,3 +180,61 @@ class ResetPasswordView(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class OnboardingView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+
+        try:
+            weight = float(data.get("weight"))  # kg
+            height = float(data.get("height"))  # cm
+            age = int(data.get("age"))
+            gender = data.get("gender")  # "male" or "female"
+            activity_level = data.get("activity_level")  # sedentary, light, moderate, active, very_active
+            goal = data.get("goal")  # "lose", "maintain", "gain"
+        except (TypeError, ValueError):
+            return Response({"detail": "Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if gender == "male":
+            bmr = 10 * weight + 6.25 * height - 5 * age + 5
+        else:
+            bmr = 10 * weight + 6.25 * height - 5 * age - 161
+
+        activity_map = {
+            "sedentary": 1.2,
+            "light": 1.375,
+            "moderate": 1.55,
+            "active": 1.725,
+            "very_active": 1.9
+        }
+        multiplier = activity_map.get(activity_level, 1.2)
+        maintenance_calories = bmr * multiplier
+
+        if goal == "lose":
+            daily_calories = maintenance_calories - 500
+        elif goal == "gain":
+            daily_calories = maintenance_calories + 500
+        else:
+            daily_calories = maintenance_calories
+
+        profile, _ = Profile.objects.get_or_create(user=user)
+        profile.stats = {
+            "weight": weight,
+            "height": height,
+            "age": age,
+            "gender": gender,
+            "activity_level": activity_level,
+            "goal": goal,
+            "bmr": round(bmr),
+            "maintenance_calories": round(maintenance_calories),
+            "daily_calories": round(daily_calories),
+        }
+        profile.save()
+
+        return Response({
+            "message": "Onboarding completed successfully",
+            "stats": profile.stats
+        }, status=status.HTTP_200_OK)
