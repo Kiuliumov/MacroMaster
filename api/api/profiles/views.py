@@ -192,7 +192,7 @@ class OnboardingView(APIView):
             weight = float(data.get("weight"))  # kg
             height = float(data.get("height"))  # cm
             age = int(data.get("age"))
-            gender = data.get("gender")  # "male" or "female"
+            gender = data.get("gender")
             activity_level = data.get("activity_level")
             goal = data.get("goal")
         except (TypeError, ValueError):
