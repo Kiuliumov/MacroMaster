@@ -194,7 +194,7 @@ class OnboardingView(APIView):
             age = int(data.get("age"))
             gender = data.get("gender")  # "male" or "female"
             activity_level = data.get("activity_level")  # sedentary, light, moderate, active, very_active
-            goal = data.get("goal")  # "lose", "maintain", "gain"
+            goal = data.get("goal")
         except (TypeError, ValueError):
             return Response({"detail": "Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
 
