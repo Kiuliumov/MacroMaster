@@ -193,7 +193,7 @@ class OnboardingView(APIView):
             height = float(data.get("height"))  # cm
             age = int(data.get("age"))
             gender = data.get("gender")  # "male" or "female"
-            activity_level = data.get("activity_level")  # sedentary, light, moderate, active, very_active
+            activity_level = data.get("activity_level")
             goal = data.get("goal")
         except (TypeError, ValueError):
             return Response({"detail": "Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
