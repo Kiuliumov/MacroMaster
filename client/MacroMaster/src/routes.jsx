@@ -3,6 +3,7 @@ import ProtectedRoute from "./route_components/ProtectedRoute";
 import GuestRoute from "./route_components/GuestRoute";
 import RegularLayout from "./layouts/RegularLayout";
 import SiteLayout from "./layouts/SiteLayout";
+import Onboarding from "./pages/Auth/Onboarding";
 
 // --- Public Pages ---
 const Homepage = lazy(() => import("./pages/Home/Homepage"));
@@ -39,7 +40,8 @@ const routes = [
   { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute>, layout: SiteLayout },
   { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute>, layout: SiteLayout},
   { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute>, layout: SiteLayout },
-  { path: "/activate/:uid/:token", element: <ActivationSuccess />, layout: SiteLayout },
+  { path: "/activate/:uid/:token", element: <ProtectedRoute><ActivationSuccess /></ProtectedRoute>, layout: SiteLayout },
+  { path: "/onboarding", element: <ProtectedRoute><Onboarding  /></ProtectedRoute>, layout: RegularLayout },
 
   // Protected routes
   { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute>, layout: SiteLayout },
