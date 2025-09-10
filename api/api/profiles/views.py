@@ -190,7 +190,7 @@ class OnboardingView(APIView):
 
         try:
             weight = float(data.get("weight"))  # kg
-            height = float(data.get("height"))  # cm
+            height = float(data.get("height"))
             age = int(data.get("age"))
             gender = data.get("gender")
             activity_level = data.get("activity_level")
