@@ -9,6 +9,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth import authenticate, get_user_model
+from rest_framework_simplejwt.exceptions import InvalidToken
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import RegisterSerializer, User, ResetPasswordSerializer, ForgotPasswordSerializer
 from rest_framework import generics, permissions
@@ -17,6 +18,8 @@ from .serializers import ProfileSerializer
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+
+from django.conf import settings
 
 token_generator = PasswordResetTokenGenerator()
 
@@ -68,29 +71,60 @@ class ActivateAccountView(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
+        username = request.data.get("username")
+        password = request.data.get("password")
         user = authenticate(request, username=username, password=password)
-        if user:
-            print(user.id)
-            profile = Profile.objects.get(user_id=user.id)
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "user": {
-                    "username": user.username,
-                    "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "is_staff": user.is_staff,
-                    "is_superuser": user.is_superuser,
-                    "stats": profile.stats
-                },
-                "access": str(refresh.access_token),
-                "refresh": str(refresh)
-            })
 
-        return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        if not user:
+            return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
+        profile = Profile.objects.filter(user=user).first()
+        refresh = RefreshToken.for_user(user)
+
+        response = Response({
+            "user": {
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
+                "stats": profile.stats if profile else {},
+            },
+            "access": str(refresh.access_token),
+        })
+
+        response.set_cookie(
+            key="refresh",
+            value=str(refresh),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax",
+            path="/api/auth/",
+            max_age=7 * 24 * 60 * 60,
+        )
+
+        return response
+
+
+class RefreshAccessView(APIView):
+    def post(self, request):
+        refresh_cookie = request.COOKIES.get("refresh")
+        if not refresh_cookie:
+            return Response({"detail": "No refresh token"}, status=401)
+
+        try:
+            refresh = RefreshToken(refresh_cookie)
+            new_access = str(refresh.access_token)
+            return Response({"access": new_access})
+        except InvalidToken:
+            return Response({"detail": "Invalid refresh token"}, status=401)
+
+class LogoutView(APIView):
+    def post(self, request):
+        response = Response({"message": "Logged out"}, status=200)
+        response.delete_cookie("refresh", path="/api/auth/")
+        return response
 
 
 class ProfileDetailView(generics.RetrieveAPIView):
