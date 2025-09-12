@@ -6,11 +6,13 @@ export function useLogin() {
 
   const login = async (username, password) => {
     setError("");
+
     try {
       const res = await fetch(`${API_BASE_URL}/login/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
+        credentials: "include", 
       });
 
       const data = await res.json();
@@ -19,12 +21,9 @@ export function useLogin() {
         throw new Error(data.detail || "Invalid credentials.");
       }
 
-      document.cookie = `access=${data.access}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax; Secure`;
-      document.cookie = `refresh=${data.refresh}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax; Secure`;
-
-      return { ...data.user, token: data.access };
+      return { user: data.user, access: data.access };
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Login failed");
       return null;
     }
   };
