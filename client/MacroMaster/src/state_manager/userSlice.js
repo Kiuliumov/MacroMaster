@@ -5,6 +5,7 @@ const savedUser = localStorage.getItem("user");
 const initialState = {
   user: savedUser ? JSON.parse(savedUser) : null,
   isLoggedIn: !!savedUser,
+  accessToken: null, // 🔑 keep only in memory
 };
 
 export const userSlice = createSlice({
@@ -12,19 +13,26 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUser: (state, action) => {
-      state.user = action.payload;
+      const { user, access } = action.payload;
+
+      state.user = user;
       state.isLoggedIn = true;
-      localStorage.setItem("user", JSON.stringify(action.payload));
+      state.accessToken = access;
+
+      localStorage.setItem("user", JSON.stringify(user));
+    },
+    setAccessToken: (state, action) => {
+      state.accessToken = action.payload; 
     },
     logout: (state) => {
       state.user = null;
       state.isLoggedIn = false;
+      state.accessToken = null;
+
       localStorage.removeItem("user");
-      document.cookie = "access=; Max-Age=0; path=/; SameSite=Lax";
-      document.cookie = "refresh=; Max-Age=0; path=/; SameSite=Lax";
     },
   },
 });
 
-export const { setUser, logout } = userSlice.actions;
+export const { setUser, setAccessToken, logout } = userSlice.actions;
 export default userSlice.reducer;
