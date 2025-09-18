@@ -167,6 +167,14 @@ class RefreshAccessView(APIView):
             return Response({"detail": "Invalid refresh token"}, status=401)
 
 class LogoutView(APIView):
+    """
+       Logs out the user.
+
+       - Accepts `POST` requests.
+       - Deletes the refresh token cookie.
+       - Response:
+           200: Successfully logged out.
+       """
     def post(self, request):
         response = Response({"message": "Logged out"}, status=200)
         response.delete_cookie("refresh", path="/api/auth/")
@@ -174,6 +182,16 @@ class LogoutView(APIView):
 
 
 class ProfileDetailView(generics.RetrieveAPIView):
+    """
+        Retrieves the authenticated user's profile details.
+
+        - Requires authentication.
+        - Uses async ORM call to fetch the profile with the related user.
+        - Response:
+            200: Profile details.
+            403/401: Unauthorized.
+        """
+
     serializer_class = ProfileSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -181,6 +199,16 @@ class ProfileDetailView(generics.RetrieveAPIView):
         return await Profile.objects.select_related('user').aget(user=self.request.user)
 
 class CheckRegisteredUsernames(APIView):
+    """
+        Checks if a username is already taken.
+
+        - Accepts `POST` requests with `username`.
+        - Validates uniqueness against active users.
+        - Response:
+            200: Username available.
+            400: Username missing or already taken.
+        """
+
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
 
@@ -194,6 +222,15 @@ class CheckRegisteredUsernames(APIView):
 
 
 class CheckRegisteredEmails(APIView):
+    """
+        Checks if an email is already registered.
+
+        - Accepts `POST` requests with `email`.
+        - Validates uniqueness against active users.
+        - Response:
+            200: Email available.
+            400: Email missing or already registered.
+        """
     def post(self, request, *args, **kwargs):
         email = request.data.get('email')
 
@@ -207,6 +244,15 @@ class CheckRegisteredEmails(APIView):
 
 
 class MeView(APIView):
+    """
+        Returns the authenticated user's profile and account details.
+
+        - Requires authentication.
+        - Fetches the profile and returns user info with stats.
+        - Response:
+            200: User and profile details.
+            404: Profile not found.
+        """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
@@ -228,6 +274,15 @@ class MeView(APIView):
         }, status=status.HTTP_200_OK)
 
 class ForgotPasswordView(APIView):
+    """
+        Initiates password reset process.
+
+        - Accepts `POST` requests with `email`.
+        - Sends a password reset email with a tokenized link if the user exists.
+        - Response:
+            200: Reset link sent.
+            400: Validation errors (e.g., email not provided/invalid).
+        """
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -251,6 +306,15 @@ class ForgotPasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ResetPasswordView(APIView):
+    """
+        Resets a user's password.
+
+        - Accepts `POST` requests with new password data and token.
+        - Validates and updates the user’s password.
+        - Response:
+            200: Password reset successful.
+            400: Validation errors (invalid token, weak password, etc.).
+        """
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
@@ -262,6 +326,18 @@ class ResetPasswordView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class OnboardingView(APIView):
+    """
+        Handles onboarding and calorie calculation.
+
+        - Accepts `POST` requests with `weight`, `height`, `age`, `gender`,
+          `activity_level`, and `goal`.
+        - Calculates BMR, maintenance calories, and target daily calories
+          based on the goal.
+        - Stores the calculated stats in the user's profile.
+        - Response:
+            200: Onboarding completed, stats returned.
+            400: Invalid input data.
+        """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
