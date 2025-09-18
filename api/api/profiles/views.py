@@ -143,6 +143,17 @@ class LoginView(APIView):
 
 
 class RefreshAccessView(APIView):
+    """
+        Provides a new access token using a refresh token.
+
+        - Accepts `POST` requests.
+        - Reads the refresh token from cookies.
+        - Returns a new access token if the refresh token is valid.
+        - Response:
+            200: New access token.
+            401: Missing or invalid refresh token.
+        """
+
     def post(self, request):
         refresh_cookie = request.COOKIES.get("refresh")
         if not refresh_cookie:
