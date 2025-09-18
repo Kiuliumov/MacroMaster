@@ -8,6 +8,7 @@ import PrivacyNotice from "./components/PrivacyNotice";
 import Loader from "./components/Loader";
 import OnboardingCheck from "./components/OnBoardingCheck";
 import { useAuth } from "../hooks/useAuth";
+import ThemeSetup from "./ThemeSetup";
 
 function App() {
   useAuth();
@@ -15,9 +16,10 @@ function App() {
   return (
     <>
       <ScrollToTop />
+      <ThemeSetup />
       <Toast />
       <PrivacyNotice />
-      {/* <OnboardingCheck /> */}
+      <OnboardingCheck />
 
       <Suspense fallback={<Loader />}>
         <Routes>
