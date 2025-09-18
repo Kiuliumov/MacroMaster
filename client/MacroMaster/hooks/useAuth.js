@@ -17,7 +17,7 @@ export function useAuth() {
     async function rehydrateUser() {
       if (!user) {
         try {
-          const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh/`, {
+          const refreshRes = await fetch(`${API_BASE_URL}/refresh/`, {
             method: "POST",
             credentials: "include", 
           });
@@ -32,7 +32,7 @@ export function useAuth() {
           dispatch(setAccessToken(newAccess));
           setIsLoggedIn(true);
 
-          const meRes = await fetch(`${API_BASE_URL}/auth/me/`, {
+          const meRes = await fetch(`${API_BASE_URL}/me/`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${newAccess}`,
