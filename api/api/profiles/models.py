@@ -94,7 +94,7 @@ class Profile(models.Model):
             "bmi": self.bmi,
             "activity_level": self.activity_level,
             "goal": self.goal,
-            "profile_picture": self.profile_picture.url if self.profile_picture else None,
+            "profile_picture": self.profile_picture if self.profile_picture else None,
             "bio": self.bio,
 
             # Daily stats
