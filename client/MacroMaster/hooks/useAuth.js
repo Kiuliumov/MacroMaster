@@ -11,8 +11,6 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(!!accessToken); 
 
-  const onboardingRequired = user && !user.stats?.daily_calories;
-
   useEffect(() => {
     async function rehydrateUser() {
       if (!user) {
@@ -63,7 +61,6 @@ export function useAuth() {
     user,
     isLoggedIn,
     token: accessToken,
-    onboardingRequired,
     loading,
   };
 }

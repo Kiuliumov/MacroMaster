@@ -4,7 +4,7 @@ import { Navigate } from 'react-router-dom';
 export default function OnboardingCheck() {
   const { user } = useAuth();
 
-  if (!user.onboarding) {
+  if (user && !user.stats.onboarding) {
     return <Navigate to="/onboarding" replace />;
   }
 
