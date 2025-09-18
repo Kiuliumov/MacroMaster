@@ -2,9 +2,9 @@ import { useAuth } from '../../hooks/useAuth';
 import { Navigate } from 'react-router-dom';
 
 export default function OnboardingCheck() {
-  const { isLoggedIn, onboardingRequired } = useAuth();
+  const { user } = useAuth();
 
-  if (isLoggedIn && onboardingRequired) {
+  if (!user.onboarding) {
     return <Navigate to="/onboarding" replace />;
   }
 
