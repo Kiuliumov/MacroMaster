@@ -8,7 +8,7 @@ export default function AccountHero({ user }) {
   const currentWeight = user?.stats?.current_weight;
   const targetWeight = user?.stats?.target_weight;
   const startingWeight = user?.stats?.starting_weight ?? currentWeight;
-
+  
   let weightProgress = 0;
   if (currentWeight != null && targetWeight != null) {
     if (currentWeight === targetWeight) weightProgress = 100;

@@ -4,7 +4,7 @@ import routes from "./routes";
 
 import Toast from "./components/Toast";
 import ScrollToTop from "./components/Scroller";
-import CookieNotice from "./components/CookieNotice";
+import PrivacyNotice from "./components/PrivacyNotice";
 import Loader from "./components/Loader";
 import OnboardingCheck from "./components/OnBoardingCheck";
 import { useAuth } from "../hooks/useAuth";
@@ -16,7 +16,7 @@ function App() {
     <>
       <ScrollToTop />
       <Toast />
-      <CookieNotice />
+      <PrivacyNotice />
       {/* <OnboardingCheck /> */}
 
       <Suspense fallback={<Loader />}>

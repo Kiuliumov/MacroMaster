@@ -44,7 +44,13 @@ export default function ActivationSuccess() {
           setCookie("refresh", data.refresh, 7);
         }
 
-        dispatch(setUser({ token: data.access }));
+        dispatch(
+          setUser({
+            user: data.user,       
+            access: data.access,
+          })
+        );
+
         setStatus("success");
       } catch (err) {
         setErrorMessage(err.message || "Unexpected error");
@@ -64,7 +70,6 @@ export default function ActivationSuccess() {
             "linear-gradient(106.89deg, rgba(192, 132, 252, 0.2) 15.73%, rgba(14, 165, 233, 0.6) 15.74%, rgba(232, 121, 249, 0.35) 56.49%, rgba(79, 70, 229, 0.5) 115.91%)",
         }}
       />
-
       <div className="relative z-10 w-full max-w-md">
         <CardWrapper title={title}>{children}</CardWrapper>
       </div>

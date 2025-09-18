@@ -61,16 +61,12 @@ class RegisterView(APIView):
 
 class ActivateAccountView(APIView):
     """
-    Activates a user account.
+    Activates a user account and returns user info with profile stats.
 
-    - Accepts `GET` requests with `uidb64` and `token` in the URL.
-    - Validates the token and activates the corresponding user account.
-    - Issues a JWT access and refresh token upon success.
-    - Response:
-        200: Account activated, tokens returned.
-        400: Invalid or expired activation link.
+    - Accepts `GET` requests with `uidb64` and `token`.
+    - Activates user if token is valid.
+    - Returns user object, access token, and refresh token.
     """
-
     def get(self, request, uidb64, token):
         User = get_user_model()
 
@@ -83,11 +79,28 @@ class ActivateAccountView(APIView):
         if user and not user.is_active and default_token_generator.check_token(user, token):
             user.is_active = True
             user.save()
+
             refresh = RefreshToken.for_user(user)
+
+            try:
+                profile = Profile.objects.get(user=user)
+                stats = profile.stats
+            except Profile.DoesNotExist:
+                stats = {}
+
             return Response({
                 "message": "Account activated successfully!",
                 "access": str(refresh.access_token),
                 "refresh": str(refresh),
+                "user": {
+                    "username": user.username,
+                    "email": user.email,
+                    "first_name": user.first_name,
+                    "last_name": user.last_name,
+                    "is_staff": user.is_staff,
+                    "is_superuser": user.is_superuser,
+                    "stats": stats,
+                }
             }, status=status.HTTP_200_OK)
 
         return Response({"error": "Invalid or expired link"}, status=status.HTTP_400_BAD_REQUEST)

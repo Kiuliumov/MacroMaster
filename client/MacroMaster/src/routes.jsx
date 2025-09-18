@@ -18,9 +18,9 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 // --- Auth Pages ---
 const LoginPage = lazy(() => import("./pages/Auth/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/Auth/RegisterPage"));
-const ForgotPasswordPage = lazy(() => import("./pages/auth/ForgotPasswordPage"));
-const ActivationSuccess = lazy(() => import("./pages/auth/components/ActivationSuccess"));
-const PasswordReset = lazy(() => import('./pages/Auth/PasswordReset'))
+const ForgotPasswordPage = lazy(() => import("./pages/Auth/ForgotPasswordPage"));
+const ActivationSuccess = lazy(() => import("./pages/Auth/components/ActivationSuccess"));
+const PasswordReset = lazy(() => import("./pages/Auth/PasswordReset"));
 
 // --- Dashboard Pages ---
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
