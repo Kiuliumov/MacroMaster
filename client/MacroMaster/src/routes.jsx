@@ -20,6 +20,7 @@ const LoginPage = lazy(() => import("./pages/Auth/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/Auth/RegisterPage"));
 const ForgotPasswordPage = lazy(() => import("./pages/auth/ForgotPasswordPage"));
 const ActivationSuccess = lazy(() => import("./pages/auth/components/ActivationSuccess"));
+const PasswordReset = lazy(() => import('./pages/Auth/PasswordReset'))
 
 // --- Dashboard Pages ---
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
@@ -40,11 +41,12 @@ const routes = [
   { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute>, layout: SiteLayout },
   { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute>, layout: SiteLayout},
   { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute>, layout: SiteLayout },
-  { path: "/activate/:uid/:token", element: <ProtectedRoute><ActivationSuccess /></ProtectedRoute>, layout: SiteLayout },
-  { path: "/onboarding", element: <ProtectedRoute><Onboarding  /></ProtectedRoute>, layout: RegularLayout },
-
+  { path: "/activate/:uid/:token", element: <GuestRoute><ActivationSuccess /></GuestRoute>, layout: SiteLayout },
+  {path: "/reset-password/:uid/:token", element: <GuestRoute><PasswordReset /></GuestRoute>, layout: RegularLayout},
+  
   // Protected routes
   { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute>, layout: SiteLayout },
+  { path: "/onboarding", element: <ProtectedRoute><Onboarding  /></ProtectedRoute>, layout: RegularLayout },
 
   // Catch-all
   { path: "*", element: <NotFoundPage />, layout: SiteLayout },
