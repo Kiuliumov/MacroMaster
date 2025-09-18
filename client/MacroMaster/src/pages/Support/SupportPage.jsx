@@ -1,8 +1,13 @@
+import { Link } from "react-router-dom";
 import ContactForm from "./components/ContactForm";
 import OfficeLocation from "./components/OfficeLocation";
 import { supportStyles } from "./styles";
-
+import { useAuth } from "../../../hooks/useAuth"; 
 export default function SupportPage() {
+  const { user } = useAuth();
+
+  const isAdmin = user?.is_staff || user?.is_superuser;
+
   return (
     <main className={supportStyles.container}>
       <div
@@ -19,6 +24,14 @@ export default function SupportPage() {
           Have questions, feedback, or need assistance? Fill out the form below
           and our support team will get back to you as soon as possible.
         </p>
+        {isAdmin && (
+          <Link
+            to="/contact-messages"
+            className="mt-2 inline-block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+          >
+            View Contact Messages
+          </Link>
+        )}
       </div>
 
       <div className={supportStyles.mainContentGrid}>
