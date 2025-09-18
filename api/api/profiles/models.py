@@ -38,6 +38,13 @@ class Profile(models.Model):
 
     profile_picture = models.ImageField(upload_to='profiles/', null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
+    workouts_completed = models.PositiveIntegerField(null=True, blank=True)
+
+    # Reset
+    water_consumed = models.FloatField(null=True, blank=True, default=0)
+    streak = models.PositiveIntegerField(null=True, blank=True)
+    calories_consumed = models.PositiveIntegerField(null=True, blank=True)
+    calories_burnt = models.PositiveIntegerField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -59,7 +66,24 @@ class Profile(models.Model):
         return None
 
     @property
+    def current_deficit(self):
+        if self.daily_calorie_goal is None or self.calories_consumed is None:
+            return None
+
+        calories_burnt = self.calories_burnt or 0
+
+        return (self.daily_calorie_goal + calories_burnt) - self.calories_consumed
+
+    @property
     def stats(self):
+        calories_consumed = self.calories_consumed or 0
+        calories_burnt = self.calories_burnt or 0
+        calorie_goal = self.daily_calorie_goal or 0
+
+        current_deficit = None
+        if calorie_goal:
+            current_deficit = (calorie_goal + calories_burnt) - calories_consumed
+
         return {
             "age": self.age,
             "gender": self.gender,
@@ -70,5 +94,17 @@ class Profile(models.Model):
             "bmi": self.bmi,
             "activity_level": self.activity_level,
             "goal": self.goal,
-            "calorie_goal": self.daily_calorie_goal,
+            "profile_picture": self.profile_picture.url if self.profile_picture else None,
+            "bio": self.bio,
+
+            # Daily stats
+            "water_consumed": self.water_consumed or 0,
+            "calorie_goal": calorie_goal,
+            "calories_consumed": calories_consumed,
+            "calories_burnt": calories_burnt,
+            "current_deficit": current_deficit,
+
+            # Progress stats
+            "streak": self.streak or 0,
+            "workouts_completed": self.workouts_completed or 0,
         }
