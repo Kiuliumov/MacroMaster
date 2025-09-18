@@ -14,22 +14,21 @@ export default function AccountHero({ user }) {
 		if (currentWeight === targetWeight) weightProgress = 100;
 		else {
 			weightProgress = Math.min(
-				((startingWeight - currentWeight) / (startingWeight - targetWeight)) *
-					100,
+				((startingWeight - currentWeight) / (startingWeight - targetWeight)) * 100,
 				100
 			);
 		}
 	}
 
-	const caloriesConsumed = user?.stats?.calories_today ?? 0;
+	const caloriesConsumed = user?.stats?.calories_consumed ?? 0;
 	const calorieGoal = user?.stats?.calorie_goal ?? 1;
 	const calorieProgress = Math.min((caloriesConsumed / calorieGoal) * 100, 100);
 
-	const waterConsumed = user?.stats?.water_today ?? 0;
-	const waterGoal = user?.stats?.water_goal ?? 8;
+	const waterConsumed = user?.stats?.water_consumed ?? 0;
+	const waterGoal = 8;
 	const waterProgress = Math.min((waterConsumed / waterGoal) * 100, 100);
 
-	const streak = user?.stats?.streak_days ?? 0;
+	const streak = user?.stats?.streak ?? 0;
 
 	const quotes = [
 		"Small steps every day lead to big results.",
@@ -95,10 +94,7 @@ export default function AccountHero({ user }) {
 				/>
 			</div>
 
-			<div
-				className="mt-10 flex flex-wrap justify-center gap-4 animate-fade-in"
-				style={{ animationDelay: "800ms" }}
-			>
+			<div className="mt-10 flex flex-wrap justify-center gap-4 animate-fade-in" style={{ animationDelay: "800ms" }}>
 				<Link
 					to="/dashboard"
 					className={`${commonStyles.btnDashboard} bg-blue-600 hover:bg-blue-700`}
