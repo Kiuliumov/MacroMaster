@@ -34,7 +34,6 @@ export default function AccountHero({ user }) {
         Keep pushing towards your goals – you’re doing amazing!
       </p>
 
-      {/* Stats grid */}
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
         <StatCard
           icon={<Activity className="h-10 w-10 text-purple-500" />}
