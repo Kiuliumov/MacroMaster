@@ -1,10 +1,12 @@
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function GuestRoute({ children }) {
-  const user = useSelector((state) => state.user.user);
+  const { user, loading } = useAuth();
 
-  if (user?.token) {
+  if (loading) return null; 
+
+  if (user) {
     return <Navigate to="/" replace />;
   }
 

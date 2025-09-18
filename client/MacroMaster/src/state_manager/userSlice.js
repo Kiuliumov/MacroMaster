@@ -4,7 +4,6 @@ const savedUser = localStorage.getItem("user");
 
 const initialState = {
   user: savedUser ? JSON.parse(savedUser) : null,
-  isLoggedIn: !!savedUser,
   accessToken: null,
 };
 
@@ -26,7 +25,6 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.user = null;
-      state.isLoggedIn = false;
       state.accessToken = null;
 
       localStorage.removeItem("user");

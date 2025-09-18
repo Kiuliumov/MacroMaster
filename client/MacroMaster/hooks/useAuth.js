@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser, setAccessToken } from "../src/state_manager/userSlice";
 import { API_BASE_URL } from "../src/config";
@@ -6,26 +6,33 @@ import { API_BASE_URL } from "../src/config";
 export function useAuth() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const accessToken = useSelector((state) => state.user.accessToken);
 
-  const onboardingRequired = isLoggedIn && user && !user.stats?.daily_calories;
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!accessToken); 
+
+  const onboardingRequired = user && !user.stats?.daily_calories;
 
   useEffect(() => {
     async function rehydrateUser() {
       if (!user) {
         try {
-          const refreshRes = await fetch(`${API_BASE_URL}/refresh/`, {
+          const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh/`, {
             method: "POST",
             credentials: "include", 
           });
 
-          if (!refreshRes.ok) return; 
+          if (!refreshRes.ok) {
+            setIsLoggedIn(false);
+            setLoading(false);
+            return;
+          }
 
           const { access: newAccess } = await refreshRes.json();
           dispatch(setAccessToken(newAccess));
+          setIsLoggedIn(true);
 
-          const meRes = await fetch(`${API_BASE_URL}/me/`, {
+          const meRes = await fetch(`${API_BASE_URL}/auth/me/`, {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${newAccess}`,
@@ -39,7 +46,13 @@ export function useAuth() {
           dispatch(setUser({ user: data.user, access: newAccess }));
         } catch (err) {
           console.error("Could not rehydrate user:", err);
+          setIsLoggedIn(false);
+        } finally {
+          setLoading(false);
         }
+      } else {
+        setIsLoggedIn(true); 
+        setLoading(false);
       }
     }
 
@@ -51,6 +64,6 @@ export function useAuth() {
     isLoggedIn,
     token: accessToken,
     onboardingRequired,
-    loading: !user,
+    loading,
   };
 }
