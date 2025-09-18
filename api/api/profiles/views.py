@@ -23,7 +23,20 @@ from django.conf import settings
 
 token_generator = PasswordResetTokenGenerator()
 
+
 class RegisterView(APIView):
+
+    """
+    Handles user registration.
+
+    - Accepts `POST` requests with user registration data.
+    - Creates a new inactive user and sends an activation email
+      containing a tokenized activation link.
+    - Response:
+        201: User created, activation email sent.
+        400: Validation errors.
+    """
+
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
@@ -47,6 +60,17 @@ class RegisterView(APIView):
 
 
 class ActivateAccountView(APIView):
+    """
+    Activates a user account.
+
+    - Accepts `GET` requests with `uidb64` and `token` in the URL.
+    - Validates the token and activates the corresponding user account.
+    - Issues a JWT access and refresh token upon success.
+    - Response:
+        200: Account activated, tokens returned.
+        400: Invalid or expired activation link.
+    """
+
     def get(self, request, uidb64, token):
         User = get_user_model()
 
@@ -70,6 +94,8 @@ class ActivateAccountView(APIView):
 
 
 class LoginView(APIView):
+
+
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
