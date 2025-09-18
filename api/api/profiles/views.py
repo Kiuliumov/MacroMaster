@@ -335,19 +335,15 @@ class ResetPasswordView(APIView):
             )
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
 class OnboardingView(APIView):
     """
-        Handles onboarding and calorie calculation.
+    Handles onboarding and calorie calculation.
 
-        - Accepts `POST` requests with `weight`, `height`, `age`, `gender`,
-          `activity_level`, and `goal`.
-        - Calculates BMR, maintenance calories, and target daily calories
-          based on the goal.
-        - Stores the calculated stats in the user's profile.
-        - Response:
-            200: Onboarding completed, stats returned.
-            400: Invalid input data.
-        """
+    - Accepts POST requests with `weight`, `height`, `age`, `gender`, `activity_level`, and `goal`.
+    - Updates the authenticated user's profile and calculates daily calorie goal.
+    - Returns updated profile stats.
+    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
@@ -386,18 +382,27 @@ class OnboardingView(APIView):
         else:
             daily_calories = maintenance_calories
 
-        profile, _ = Profile.objects.get_or_create(user=user)
-        profile.stats = {
-            "weight": weight,
-            "height": height,
-            "age": age,
-            "gender": gender,
-            "activity_level": activity_level,
-            "goal": goal,
-            "bmr": round(bmr),
-            "maintenance_calories": round(maintenance_calories),
-            "daily_calories": round(daily_calories),
-        }
+        # Get existing profile
+        try:
+            profile = Profile.objects.get(user=user)
+        except Profile.DoesNotExist:
+            return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        profile.age = age
+        profile.gender = gender
+        profile.height_cm = height
+        profile.weight_kg = weight
+        profile.activity_level = activity_level
+        profile.goal = goal
+        profile.daily_calorie_goal = round(daily_calories)
+        profile.onboarding_completed = True
+        if goal == "lose":
+            profile.target_weight_kg = weight - 5
+        elif goal == "gain":
+            profile.target_weight_kg = weight + 5
+        else:
+            profile.target_weight_kg = weight
+
         profile.save()
 
         return Response({
