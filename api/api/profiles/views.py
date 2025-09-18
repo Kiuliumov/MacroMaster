@@ -94,8 +94,17 @@ class ActivateAccountView(APIView):
 
 
 class LoginView(APIView):
+    """
+        Handles user login.
 
-
+        - Accepts `POST` requests with `username` and `password`.
+        - Authenticates the user and returns user details along with
+          an access token.
+        - Sets a secure HTTP-only cookie containing the refresh token.
+        - Response:
+            200: User authenticated, tokens returned.
+            401: Invalid credentials.
+        """
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
