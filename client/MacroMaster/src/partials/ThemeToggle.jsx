@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState(
@@ -7,8 +7,13 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove(theme === "dark" ? "light" : "dark");
-    root.classList.add(theme);
+
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+
     localStorage.setItem("theme", theme);
   }, [theme]);
 
