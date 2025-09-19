@@ -27,3 +27,13 @@ cursor: pointer;
 .animate-slide-down {
   animation: slide-down 0.8s ease forwards;
 }
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; /* Firefox */
+}
