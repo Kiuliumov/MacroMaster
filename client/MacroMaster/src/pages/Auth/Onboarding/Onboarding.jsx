@@ -65,14 +65,14 @@ export default function Onboarding() {
 
 	const steps = [
 		{
-			title: "What's your weight?",
+			title: "Weight?",
 			field: "weight",
 			icon: <FaWeight className="text-purple-500 w-6 h-6 inline-block mr-2" />,
 			type: "number",
 			placeholder: "Weight (kg)",
 		},
 		{
-			title: "How tall are you?",
+			title: "Height?",
 			field: "height",
 			icon: (
 				<FaRulerVertical className="text-purple-500 w-6 h-6 inline-block mr-2" />
@@ -108,9 +108,7 @@ export default function Onboarding() {
 		{
 			title: "Your goal",
 			field: "goal",
-			icon: (
-				<FaBullseye className="text-purple-500 w-6 h-6 inline-block mr-2" />
-			),
+			icon: <FaBullseye className="text-purple-500 w-6 h-6 inline-block mr-2" />,
 			type: "select",
 			options: ["lose", "maintain", "gain"],
 		},
@@ -172,7 +170,7 @@ export default function Onboarding() {
 	const handleBack = () => step > 0 && setStep((prev) => prev - 1);
 
 	return (
-		<main className="min-h-screen flex items-center justify-center relative bg-gray-50 dark:bg-gray-900 transition-colors">
+		<main className="min-h-screen flex items-center justify-center relative bg-gray-50 dark:bg-gray-900 transition-colors px-4 py-12">
 			<div
 				className="absolute inset-0"
 				style={{
@@ -182,21 +180,33 @@ export default function Onboarding() {
 			/>
 
 			<div className="relative z-10 w-full max-w-md">
-				<CardWrapper title="Onboarding" className="shadow-2xl dark:shadow-xl">
+				<CardWrapper
+					className="shadow-2xl dark:shadow-xl flex flex-col items-center space-y-8 p-10 sm:p-12"
+				>
 					<ProgressBar progress={progress} />
-					<StepForm
-						step={steps[step]}
-						value={formData[currentField]}
-						error={errors[currentField]}
-						onChange={handleChange}
+
+					<div className="w-full px-2 sm:px-6">
+						<StepForm
+							step={steps[step]}
+							value={formData[currentField]}
+							error={errors[currentField]}
+							onChange={handleChange}
+						/>
+					</div>
+
+					<div className="w-full flex justify-center mt-2">
+						<NavigationButtons
+							step={step}
+							isLastStep={isLastStep}
+							onBack={handleBack}
+							onNext={handleNext}
+						/>
+					</div>
+
+					<LogoutButton
+						onLogout={handleLogout}
+						className="mt-4 text-sm text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition"
 					/>
-					<NavigationButtons
-						step={step}
-						isLastStep={isLastStep}
-						onBack={handleBack}
-						onNext={handleNext}
-					/>
-					<LogoutButton onLogout={handleLogout} />
 				</CardWrapper>
 			</div>
 		</main>
