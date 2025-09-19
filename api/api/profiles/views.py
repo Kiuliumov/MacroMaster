@@ -349,7 +349,6 @@ class OnboardingView(APIView):
     def post(self, request):
         user = request.user
         data = request.data
-
         try:
             weight = float(data.get("weight"))
             height = float(data.get("height"))
