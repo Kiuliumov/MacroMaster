@@ -1,0 +1,20 @@
+export default function NavigationButtons({ step, isLastStep, onBack, onNext }) {
+  return (
+    <div className="flex justify-between items-center mt-6">
+      {step > 0 && (
+        <button
+          onClick={onBack}
+          className="px-5 py-2 rounded-xl bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-100 font-medium hover:bg-gray-400 dark:hover:bg-gray-600 transition"
+        >
+          Back
+        </button>
+      )}
+      <button
+        onClick={onNext}
+        className="ml-auto px-6 py-3 rounded-2xl bg-purple-500 hover:bg-purple-600 text-white font-medium shadow-md transition"
+      >
+        {isLastStep ? "Finish" : "Next"}
+      </button>
+    </div>
+  );
+}
