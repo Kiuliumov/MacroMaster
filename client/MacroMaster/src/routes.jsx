@@ -3,7 +3,7 @@ import ProtectedRoute from "./route_components/ProtectedRoute";
 import GuestRoute from "./route_components/GuestRoute";
 import RegularLayout from "./layouts/RegularLayout";
 import SiteLayout from "./layouts/SiteLayout";
-import Onboarding from "./pages/Auth/Onboarding";
+import Onboarding from "./pages/Auth/Onboarding/Onboarding";
 
 // --- Public Pages ---
 const Homepage = lazy(() => import("./pages/Home/Homepage"));
