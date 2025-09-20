@@ -13,11 +13,21 @@ export function useAuth() {
 
   useEffect(() => {
     async function rehydrateUser() {
+      const hasAccessCookie = document.cookie
+        .split(";")
+        .some(c => c.trim().startsWith("access="));
+
+      if (!hasAccessCookie) {
+        setIsLoggedIn(false);
+        setLoading(false);
+        return;
+      }
+
       if (!user) {
         try {
           const refreshRes = await fetch(`${API_BASE_URL}/refresh/`, {
             method: "POST",
-            credentials: "include", 
+            credentials: "include",
           });
 
           if (!refreshRes.ok) {
@@ -49,7 +59,7 @@ export function useAuth() {
           setLoading(false);
         }
       } else {
-        setIsLoggedIn(true); 
+        setIsLoggedIn(true);
         setLoading(false);
       }
     }
