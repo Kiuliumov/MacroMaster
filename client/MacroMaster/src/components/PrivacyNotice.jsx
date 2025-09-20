@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { Link } from 'react-router-dom';
 
 export default function PrivacyNotice() {
   const [visible, setVisible] = useState(false);
@@ -21,7 +22,7 @@ export default function PrivacyNotice() {
     <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 max-w-2xl w-full bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 p-4 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between z-50">
       <p className="text-sm text-gray-700 dark:text-gray-300 mr-4">
         We use cookies to enhance your experience. By continuing, you agree to
-        our use of cookies. See our <a href="/policy" className="underline">Privacy Policy</a>.
+        our use of cookies. See our <Link to="/policy" className="underline">Privacy Policy</Link>.
       </p>
       <button
         onClick={handleAccept}
