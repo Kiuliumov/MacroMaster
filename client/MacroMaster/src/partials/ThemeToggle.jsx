@@ -13,22 +13,15 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const root = window.document.documentElement;
-
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
-
-    localStorage.setItem("theme", theme);
+    root.classList.toggle("dark", theme === "dark");
   }, [theme]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
     const handleChange = (e) => {
-      // Only update if the user hasn't set a manual preference
-      if (!localStorage.getItem("theme")) {
+      const savedTheme = localStorage.getItem("theme");
+      if (!savedTheme) {
         setTheme(e.matches ? "dark" : "light");
       }
     };
@@ -40,7 +33,7 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newTheme = theme === "dark" ? "light" : "dark";
     setTheme(newTheme);
-    localStorage.setItem("theme", newTheme); // manual override
+    localStorage.setItem("theme", newTheme);
   };
 
   return (
