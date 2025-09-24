@@ -8,6 +8,7 @@ import ProgressBar from "./components/ProgressBar";
 import StepForm from "./components/StepForm";
 import NavigationButtons from "./components/NavigationButtons";
 import LogoutButton from "./components/LogoutButton";
+import { useEffect } from "react";
 import { API_BASE_URL } from "../../../config";
 import {
 	FaWeight,
@@ -17,6 +18,7 @@ import {
 	FaRunning,
 	FaBullseye,
 } from "react-icons/fa";
+import { useAuth } from "../../../../hooks/useAuth";
 
 export default function Onboarding() {
 	const [step, setStep] = useState(0);
@@ -32,7 +34,15 @@ export default function Onboarding() {
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const auth = useAuth();
+	const user = auth.user;
 
+	useEffect(() => {
+		if (user?.stats?.onboarding) {
+			navigate("/");
+		}
+	}, [user, navigate]);
+	
 	const handleLogout = () => {
 		dispatch(logout());
 		dispatch(addToast({ message: "Logout successful!", type: "success" }));
@@ -108,7 +118,9 @@ export default function Onboarding() {
 		{
 			title: "Your goal",
 			field: "goal",
-			icon: <FaBullseye className="text-purple-500 w-6 h-6 inline-block mr-2" />,
+			icon: (
+				<FaBullseye className="text-purple-500 w-6 h-6 inline-block mr-2" />
+			),
 			type: "select",
 			options: ["lose", "maintain", "gain"],
 		},
@@ -117,6 +129,13 @@ export default function Onboarding() {
 	const isLastStep = step === steps.length - 1;
 	const currentField = steps[step].field;
 	const progress = ((step + 1) / steps.length) * 100;
+
+	const getCookie = (name) => {
+		return document.cookie
+			.split("; ")
+			.find((row) => row.startsWith(name + "="))
+			?.split("=")[1];
+	};
 
 	const handleNext = async () => {
 		const errorMsg = validate(currentField, formData[currentField]);
@@ -129,16 +148,20 @@ export default function Onboarding() {
 			setStep((prev) => prev + 1);
 		} else {
 			try {
-				const csrfToken = document.cookie
-					.split("; ")
-					.find((row) => row.startsWith("csrftoken="))
-					?.split("=")[1];
+				const csrfToken = getCookie("csrftoken");
+				const accessToken = getCookie("access");
+
+				if (!accessToken) {
+					dispatch(addToast({ message: "Not authenticated", type: "error" }));
+					return;
+				}
 
 				const response = await fetch(`${API_BASE_URL}/onboarding/`, {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 						"X-CSRFToken": csrfToken || "",
+						Authorization: `Bearer ${accessToken}`,
 					},
 					credentials: "include",
 					body: JSON.stringify(formData),
@@ -180,9 +203,7 @@ export default function Onboarding() {
 			/>
 
 			<div className="relative z-10 w-full max-w-md">
-				<CardWrapper
-					className="shadow-2xl dark:shadow-xl flex flex-col items-center space-y-8 p-10 sm:p-12"
-				>
+				<CardWrapper className="shadow-2xl dark:shadow-xl flex flex-col items-center space-y-8 p-10 sm:p-12">
 					<ProgressBar progress={progress} />
 
 					<div className="w-full px-2 sm:px-6">
