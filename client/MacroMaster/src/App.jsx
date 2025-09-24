@@ -12,7 +12,7 @@ import ThemeSetup from "./ThemeSetup";
 
 function App() {
   useAuth();
-
+  
   return (
     <>
       <ScrollToTop />
