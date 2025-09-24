@@ -14,23 +14,34 @@ export function useAuth() {
   useEffect(() => {
     async function rehydrateUser() {
       try {
-        let token =
-          accessToken ||
-          document.cookie
-            .split("; ")
-            .find((c) => c.startsWith("access="))
-            ?.split("=")[1];
+        let token = document.cookie
+          .split("; ")
+          .find((c) => c.startsWith("access="))
+          ?.split("=")[1];
 
         if (!token) {
-          setIsLoggedIn(false);
-          setLoading(false);
-          return;
+          const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh/`, {
+            method: "POST",
+            credentials: "include",
+          });
+
+          if (!refreshRes.ok) {
+            dispatch(setUser(null));
+            dispatch(setAccessToken(null));
+            setIsLoggedIn(false);
+            setLoading(false);
+            return;
+          }
+
+          const { access: newAccess } = await refreshRes.json();
+          if (!newAccess) throw new Error("No access token returned from refresh");
+
+          dispatch(setAccessToken(newAccess));
+          token = newAccess;
         }
 
         let meRes = await fetch(`${API_BASE_URL}/me/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
         });
 
@@ -41,21 +52,21 @@ export function useAuth() {
           });
 
           if (!refreshRes.ok) {
+            dispatch(setUser(null));
+            dispatch(setAccessToken(null));
             setIsLoggedIn(false);
             setLoading(false);
             return;
           }
 
           const { access: newAccess } = await refreshRes.json();
-          if (!newAccess) throw new Error("No access token returned");
+          if (!newAccess) throw new Error("No access token returned from refresh");
 
           dispatch(setAccessToken(newAccess));
           token = newAccess;
 
           meRes = await fetch(`${API_BASE_URL}/me/`, {
-            headers: {
-              Authorization: `Bearer ${newAccess}`,
-            },
+            headers: { Authorization: `Bearer ${newAccess}` },
             credentials: "include",
           });
 
@@ -69,6 +80,8 @@ export function useAuth() {
         setIsLoggedIn(true);
       } catch (err) {
         console.error("Could not rehydrate user:", err);
+        dispatch(setUser(null));
+        dispatch(setAccessToken(null));
         setIsLoggedIn(false);
       } finally {
         setLoading(false);
