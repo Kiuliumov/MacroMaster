@@ -9,23 +9,33 @@ export function useAuth() {
   const accessToken = useSelector((state) => state.user.accessToken);
 
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(!!accessToken); 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     async function rehydrateUser() {
-      const hasAccessCookie = document.cookie
-        .split(";")
-        .some(c => c.trim().startsWith("access="));
+      try {
+        let token =
+          accessToken ||
+          document.cookie
+            .split("; ")
+            .find((c) => c.startsWith("access="))
+            ?.split("=")[1];
 
-      if (!hasAccessCookie) {
-        setIsLoggedIn(false);
-        setLoading(false);
-        return;
-      }
+        if (!token) {
+          setIsLoggedIn(false);
+          setLoading(false);
+          return;
+        }
 
-      if (!user) {
-        try {
-          const refreshRes = await fetch(`${API_BASE_URL}/refresh/`, {
+        let meRes = await fetch(`${API_BASE_URL}/me/`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          credentials: "include",
+        });
+
+        if (!meRes.ok) {
+          const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh/`, {
             method: "POST",
             credentials: "include",
           });
@@ -37,40 +47,36 @@ export function useAuth() {
           }
 
           const { access: newAccess } = await refreshRes.json();
-          dispatch(setAccessToken(newAccess));
-          setIsLoggedIn(true);
+          if (!newAccess) throw new Error("No access token returned");
 
-          const meRes = await fetch(`${API_BASE_URL}/me/`, {
+          dispatch(setAccessToken(newAccess));
+          token = newAccess;
+
+          meRes = await fetch(`${API_BASE_URL}/me/`, {
             headers: {
-              "Content-Type": "application/json",
               Authorization: `Bearer ${newAccess}`,
             },
             credentials: "include",
           });
 
-          if (!meRes.ok) throw new Error("Failed to fetch user");
-
-          const data = await meRes.json();
-          dispatch(setUser({ user: data.user, access: newAccess }));
-        } catch (err) {
-          console.error("Could not rehydrate user:", err);
-          setIsLoggedIn(false);
-        } finally {
-          setLoading(false);
+          if (!meRes.ok) throw new Error("Failed to fetch user after refresh");
         }
-      } else {
+
+        const data = await meRes.json();
+        if (!data.user) throw new Error("Unexpected /me/ response shape");
+
+        dispatch(setUser({ user: data.user, access: token }));
         setIsLoggedIn(true);
+      } catch (err) {
+        console.error("Could not rehydrate user:", err);
+        setIsLoggedIn(false);
+      } finally {
         setLoading(false);
       }
     }
 
     rehydrateUser();
-  }, [user, dispatch]);
+  }, [dispatch, accessToken]);
 
-  return {
-    user,
-    isLoggedIn,
-    token: accessToken,
-    loading,
-  };
+  return { user, isLoggedIn, token: accessToken, loading };
 }
