@@ -87,13 +87,13 @@ export default function MobileMenu({ setMobileOpen }) {
 						<>
 							<Button
 								to="/dashboard"
-								className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-700"
+								className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-70 flex items-center justify-center0"
 								onClick={closeMenu}
 							>
 								Dashboard
 							</Button>
 							<Button
-								className="w-full max-w-xs block px-4 py-2 text-sm bg-red-400 text-white hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 mx-auto"
+								className="w-full max-w-xs block px-4 py-2 text-sm bg-red-400 text-white hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 mx-auto flex items-center justify-center"
 								onClick={handleLogout}
 							>
 								Logout
@@ -103,14 +103,14 @@ export default function MobileMenu({ setMobileOpen }) {
 						<>
 							<Button
 								to="/login"
-								className="w-full px-4 py-2 text-sm bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700"
+								className="w-full px-4 py-2 text-sm bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 flex items-center justify-center"
 								onClick={closeMenu}
 							>
 								Log In
 							</Button>
 							<Button
 								to="/register"
-								className="w-full px-4 py-2 text-sm bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600"
+								className="w-full px-4 py-2 text-sm bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center justify-center"
 								onClick={closeMenu}
 							>
 								Sign Up
