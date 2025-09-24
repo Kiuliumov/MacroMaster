@@ -87,7 +87,7 @@ export default function MobileMenu({ setMobileOpen }) {
 						<>
 							<Button
 								to="/dashboard"
-								className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-70 flex items-center justify-center0"
+								className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-70 flex items-center justify-center"
 								onClick={closeMenu}
 							>
 								Dashboard
