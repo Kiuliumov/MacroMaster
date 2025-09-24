@@ -1,38 +1,28 @@
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-
-# Create your views here.
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
+from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model
-from rest_framework_simplejwt.exceptions import InvalidToken
-from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import RegisterSerializer, User, ResetPasswordSerializer, ForgotPasswordSerializer
-from rest_framework import generics, permissions
-from .models import Profile
-from .serializers import ProfileSerializer
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
-from django.conf import settings
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status, generics, permissions
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import InvalidToken
 
-token_generator = PasswordResetTokenGenerator()
+from .models import Profile
+from .serializers import (
+    RegisterSerializer,
+    User,
+    ResetPasswordSerializer,
+    ForgotPasswordSerializer,
+    ProfileSerializer
+)
 
 
 class RegisterView(APIView):
-
-    """
-    Handles user registration.
-
-    - Accepts `POST` requests with user registration data.
-    - Creates a new inactive user and sends an activation email
-      containing a tokenized activation link.
-    - Response:
-        201: User created, activation email sent.
-        400: Validation errors.
-    """
+    """Handles user registration and sends activation email."""
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
@@ -41,90 +31,77 @@ class RegisterView(APIView):
             user.is_active = False
             user.save()
 
-            token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
             activation_link = f"http://localhost:5173/activate/{uid}/{token}/"
 
-            subject = "Activate your account"
-            message = f"Hi {user.username},\n\nClick the link to activate your account:\n{activation_link}"
-            send_mail(subject, message, None, [user.email])
-
-            return Response(
-                {"message": "User registered. Please check your email to activate your account."},
-                status=status.HTTP_201_CREATED
+            send_mail(
+                "Activate your account",
+                f"Hi {user.username}, click the link to activate your account:\n{activation_link}",
+                None,
+                [user.email]
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "User registered. Check your email to activate your account."}, status=201)
+        return Response(serializer.errors, status=400)
 
 
 class ActivateAccountView(APIView):
-    """
-    Activates a user account and returns user info with profile stats.
+    """Activates a user account and returns JWT tokens."""
 
-    - Accepts `GET` requests with `uidb64` and `token`.
-    - Activates user if token is valid.
-    - Returns user object, access token, and refresh token.
-    """
     def get(self, request, uidb64, token):
-        User = get_user_model()
-
+        UserModel = get_user_model()
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
+            user = UserModel.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+            return Response({"error": "Invalid link"}, status=400)
 
-        if user and not user.is_active and default_token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
+        if user.is_active:
+            return Response({"error": "Account already activated"}, status=400)
 
-            refresh = RefreshToken.for_user(user)
+        if not default_token_generator.check_token(user, token):
+            return Response({"error": "Invalid or expired token"}, status=400)
 
-            try:
-                profile = Profile.objects.get(user=user)
-                stats = profile.stats
-            except Profile.DoesNotExist:
-                stats = {}
+        user.is_active = True
+        user.save()
+        refresh = RefreshToken.for_user(user)
 
-            return Response({
-                "message": "Account activated successfully!",
-                "access": str(refresh.access_token),
-                "refresh": str(refresh),
-                "user": {
-                    "username": user.username,
-                    "email": user.email,
-                    "first_name": user.first_name,
-                    "last_name": user.last_name,
-                    "is_staff": user.is_staff,
-                    "is_superuser": user.is_superuser,
-                    "stats": stats,
-                }
-            }, status=status.HTTP_200_OK)
+        try:
+            profile = Profile.objects.get(user=user)
+            stats = profile.stats
+        except Profile.DoesNotExist:
+            stats = {}
 
-        return Response({"error": "Invalid or expired link"}, status=status.HTTP_400_BAD_REQUEST)
+        response = Response({
+            "message": "Account activated successfully!",
+            "user": {
+                "username": user.username,
+                "email": user.email,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "is_staff": user.is_staff,
+                "is_superuser": user.is_superuser,
+                "stats": stats,
+            }
+        })
 
+        response.set_cookie("access", str(refresh.access_token), httponly=False, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=300)
+        response.set_cookie("refresh", str(refresh), httponly=True, secure=not settings.DEBUG, samesite="Lax", path="/api/auth/", max_age=7*24*60*60)
+        return response
 
 class LoginView(APIView):
-    """
-        Handles user login.
+    """Login user and set JWT cookies."""
 
-        - Accepts `POST` requests with `username` and `password`.
-        - Authenticates the user and returns user details along with
-          an access token.
-        - Sets a secure HTTP-only cookie containing the refresh token.
-        - Response:
-            200: User authenticated, tokens returned.
-            401: Invalid credentials.
-        """
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
         user = authenticate(request, username=username, password=password)
 
         if not user:
-            return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "Invalid credentials"}, status=401)
 
-        profile = Profile.objects.filter(user=user).first()
         refresh = RefreshToken.for_user(user)
+        profile = Profile.objects.filter(user=user).first()
 
         response = Response({
             "user": {
@@ -135,142 +112,50 @@ class LoginView(APIView):
                 "is_staff": user.is_staff,
                 "is_superuser": user.is_superuser,
                 "stats": profile.stats if profile else {},
-            },
-            "access": str(refresh.access_token),
+            }
         })
 
-        response.set_cookie(
-            key="refresh",
-            value=str(refresh),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax",
-            path="/api/auth/",
-            max_age=7 * 24 * 60 * 60,
-        )
-
+        response.set_cookie("access", str(refresh.access_token), httponly=False, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=300)
+        response.set_cookie("refresh", str(refresh), httponly=True, secure=not settings.DEBUG, samesite="Lax", path="/api/auth/", max_age=7*24*60*60)
         return response
 
 
 class RefreshAccessView(APIView):
-    """
-        Provides a new access token using a refresh token.
-
-        - Accepts `POST` requests.
-        - Reads the refresh token from cookies.
-        - Returns a new access token if the refresh token is valid.
-        - Response:
-            200: New access token.
-            401: Missing or invalid refresh token.
-        """
+    """Refresh access token using refresh cookie."""
 
     def post(self, request):
-        refresh_cookie = request.COOKIES.get("refresh")
-        if not refresh_cookie:
+        refresh_token = request.COOKIES.get("refresh")
+        if not refresh_token:
             return Response({"detail": "No refresh token"}, status=401)
-
         try:
-            refresh = RefreshToken(refresh_cookie)
+            refresh = RefreshToken(refresh_token)
             new_access = str(refresh.access_token)
-            return Response({"access": new_access})
+            response = Response({"access": new_access})
+            response.set_cookie("access", new_access, httponly=False, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=300)
+            return response
         except InvalidToken:
             return Response({"detail": "Invalid refresh token"}, status=401)
 
-class LogoutView(APIView):
-    """
-       Logs out the user.
 
-       - Accepts `POST` requests.
-       - Deletes the refresh token cookie.
-       - Response:
-           200: Successfully logged out.
-       """
+class LogoutView(APIView):
+    """Logout user and delete cookies."""
+
     def post(self, request):
         response = Response({"message": "Logged out"}, status=200)
         response.delete_cookie("refresh", path="/api/auth/")
+        response.delete_cookie("access", path="/")
         return response
 
-
-class ProfileDetailView(generics.RetrieveAPIView):
-    """
-        Retrieves the authenticated user's profile details.
-
-        - Requires authentication.
-        - Uses async ORM call to fetch the profile with the related user.
-        - Response:
-            200: Profile details.
-            403/401: Unauthorized.
-        """
-
-    serializer_class = ProfileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    async def get_object(self):
-        return await Profile.objects.select_related('user').aget(user=self.request.user)
-
-class CheckRegisteredUsernames(APIView):
-    """
-        Checks if a username is already taken.
-
-        - Accepts `POST` requests with `username`.
-        - Validates uniqueness against active users.
-        - Response:
-            200: Username available.
-            400: Username missing or already taken.
-        """
-
-    def post(self, request, *args, **kwargs):
-        username = request.data.get('username')
-
-        if not username:
-            return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        if User.objects.filter(username__iexact=username, is_active=True).exists():
-            return Response({"detail": "Username already taken."}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"detail": "Username available."}, status=status.HTTP_200_OK)
-
-
-class CheckRegisteredEmails(APIView):
-    """
-        Checks if an email is already registered.
-
-        - Accepts `POST` requests with `email`.
-        - Validates uniqueness against active users.
-        - Response:
-            200: Email available.
-            400: Email missing or already registered.
-        """
-    def post(self, request, *args, **kwargs):
-        email = request.data.get('email')
-
-        if not email:
-            return Response({"detail": "Email is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        if User.objects.filter(email=email, is_active=True).exists():
-            return Response({"detail": "Email already registered."}, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response({"detail": "Email available."}, status=status.HTTP_200_OK)
-
-
 class MeView(APIView):
-    """
-        Returns the authenticated user's profile and account details.
+    """Returns current user's info."""
 
-        - Requires authentication.
-        - Fetches the profile and returns user info with stats.
-        - Response:
-            200: User and profile details.
-            404: Profile not found.
-        """
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         try:
             profile = Profile.objects.get(user=request.user)
         except Profile.DoesNotExist:
-            return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
-
+            return Response({"detail": "Profile not found"}, status=404)
         return Response({
             "user": {
                 "username": request.user.username,
@@ -279,71 +164,76 @@ class MeView(APIView):
                 "last_name": request.user.last_name,
                 "is_staff": request.user.is_staff,
                 "is_superuser": request.user.is_superuser,
-                "stats": profile.stats,
+                "stats": profile.stats
             }
-        }, status=status.HTTP_200_OK)
+        })
+
+
+class ProfileDetailView(generics.RetrieveAPIView):
+    serializer_class = ProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    async def get_object(self):
+        return await Profile.objects.select_related("user").aget(user=self.request.user)
+
+
+class CheckRegisteredUsernames(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        if not username:
+            return Response({"detail": "Username required"}, status=400)
+        if User.objects.filter(username__iexact=username, is_active=True).exists():
+            return Response({"detail": "Username taken"}, status=400)
+        return Response({"detail": "Username available"})
+
+
+class CheckRegisteredEmails(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response({"detail": "Email required"}, status=400)
+        if User.objects.filter(email=email, is_active=True).exists():
+            return Response({"detail": "Email taken"}, status=400)
+        return Response({"detail": "Email available"})
+
 
 class ForgotPasswordView(APIView):
-    """
-        Initiates password reset process.
+    """Send password reset email with token."""
 
-        - Accepts `POST` requests with `email`.
-        - Sends a password reset email with a tokenized link if the user exists.
-        - Response:
-            200: Reset link sent.
-            400: Validation errors (e.g., email not provided/invalid).
-        """
     def post(self, request):
         serializer = ForgotPasswordSerializer(data=request.data)
         if serializer.is_valid():
             email = serializer.validated_data["email"]
-            user = User.objects.get(email=email)
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                return Response({"detail": "User with this email does not exist"}, status=400)
 
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = default_token_generator.make_token(user)
-
             reset_link = f"http://localhost:5173/reset-password/{uid}/{token}/"
 
-            subject = "Password Reset Request"
-            message = f"Hi {user.username},\n\nClick the link below to reset your password:\n{reset_link}\n\nIf you didn’t request this, you can safely ignore this email."
-            send_mail(subject, message, None, [user.email])
-
-            return Response(
-                {"message": "Password reset link sent to your email."},
-                status=status.HTTP_200_OK,
+            send_mail(
+                "Password Reset Request",
+                f"Hi {user.username},\nClick the link to reset your password:\n{reset_link}\nIgnore if you didn't request.",
+                None,
+                [user.email]
             )
+            return Response({"message": "Password reset link sent"}, status=200)
+        return Response(serializer.errors, status=400)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ResetPasswordView(APIView):
-    """
-        Resets a user's password.
+    """Reset password using token."""
 
-        - Accepts `POST` requests with new password data and token.
-        - Validates and updates the user’s password.
-        - Response:
-            200: Password reset successful.
-            400: Validation errors (invalid token, weak password, etc.).
-        """
     def post(self, request):
         serializer = ResetPasswordSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(
-                {"message": "Password has been reset successfully."},
-                status=status.HTTP_200_OK,
-            )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({"message": "Password reset successfully"}, status=200)
+        return Response(serializer.errors, status=400)
 
 class OnboardingView(APIView):
-    """
-    Handles onboarding and calorie calculation.
-
-    - Accepts POST requests with `weight`, `height`, `age`, `gender`, `activity_level`, and `goal`.
-    - Updates the authenticated user's profile and calculates daily calorie goal.
-    - Returns updated profile stats.
-    """
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
@@ -357,35 +247,17 @@ class OnboardingView(APIView):
             activity_level = data.get("activity_level")
             goal = data.get("goal")
         except (TypeError, ValueError):
-            return Response({"detail": "Invalid input data"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"detail": "Invalid input data"}, status=400)
 
-        if gender == "male":
-            bmr = 10 * weight + 6.25 * height - 5 * age + 5
-        else:
-            bmr = 10 * weight + 6.25 * height - 5 * age - 161
+        bmr = 10 * weight + 6.25 * height - 5 * age + (5 if gender == "male" else -161)
+        activity_map = {"sedentary": 1.2, "light": 1.375, "moderate": 1.55, "active": 1.725, "very_active": 1.9}
+        maintenance_calories = bmr * activity_map.get(activity_level, 1.2)
+        daily_calories = maintenance_calories + (500 if goal=="gain" else -500 if goal=="lose" else 0)
 
-        activity_map = {
-            "sedentary": 1.2,
-            "light": 1.375,
-            "moderate": 1.55,
-            "active": 1.725,
-            "very_active": 1.9
-        }
-        multiplier = activity_map.get(activity_level, 1.2)
-        maintenance_calories = bmr * multiplier
-
-        if goal == "lose":
-            daily_calories = maintenance_calories - 500
-        elif goal == "gain":
-            daily_calories = maintenance_calories + 500
-        else:
-            daily_calories = maintenance_calories
-
-        # Get existing profile
         try:
             profile = Profile.objects.get(user=user)
         except Profile.DoesNotExist:
-            return Response({"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"detail": "Profile not found"}, status=404)
 
         profile.age = age
         profile.gender = gender
@@ -394,17 +266,8 @@ class OnboardingView(APIView):
         profile.activity_level = activity_level
         profile.goal = goal
         profile.daily_calorie_goal = round(daily_calories)
-        profile.onboarding_completed = True
-        if goal == "lose":
-            profile.target_weight_kg = weight - 5
-        elif goal == "gain":
-            profile.target_weight_kg = weight + 5
-        else:
-            profile.target_weight_kg = weight
-
+        profile.onboarding = True
+        profile.target_weight_kg = weight + 5 if goal=="gain" else weight - 5 if goal=="lose" else weight
         profile.save()
 
-        return Response({
-            "message": "Onboarding completed successfully",
-            "stats": profile.stats
-        }, status=status.HTTP_200_OK)
+        return Response({"message": "Onboarding completed", "stats": profile.stats}, status=200)
