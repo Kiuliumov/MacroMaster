@@ -4,7 +4,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import { useAuth } from "../../../hooks/useAuth";
 
 export default function Homepage() {
-  const { isLoggedIn } = useAuth(); 
+  const { isLoggedIn } = useAuth();   
   return (
     <main className={commonStyles.container}>
       <div
