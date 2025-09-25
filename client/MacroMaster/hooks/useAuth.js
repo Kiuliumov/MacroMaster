@@ -20,7 +20,7 @@ export function useAuth() {
           ?.split("=")[1];
 
         if (!token) {
-          const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh/`, {
+          const refreshRes = await fetch(`${API_BASE_URL}/refresh/`, {
             method: "POST",
             credentials: "include",
           });
