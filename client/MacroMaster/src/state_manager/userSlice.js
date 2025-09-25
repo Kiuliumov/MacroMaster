@@ -23,11 +23,10 @@ export const userSlice = createSlice({
       state.user = null;
       state.accessToken = null;
       state.isLoggedIn = false;
-
-      document.cookie =
-        "access=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-      document.cookie =
-        "refresh=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      
+      const expire = "Thu, 01 Jan 1970 00:00:00 UTC";
+          document.cookie = `access=; expires=${expire}; path=/;`;
+          document.cookie = `refresh=; expires=${expire}; path=/;`; 
     },
   },
 });

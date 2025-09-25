@@ -1,6 +1,8 @@
 import { commonStyles } from "../../styles/commonStyles";
 import FeaturesSection from "./components/FeaturesSection";
 import Logo from '../../components/Logo';
+import AccountHero from "./components/AccountHero";
+import NoAccountHero from "./components/NoAccountHero";
 import { useAuth } from "../../../hooks/useAuth";
 
 export default function Homepage() {
