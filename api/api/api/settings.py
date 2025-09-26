@@ -115,8 +115,8 @@ SIMPLE_JWT = {
 
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG
-
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173"]
+CORS_ALLOW_ALL_ORIGINS = DEBUG
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5174"]
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
