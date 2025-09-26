@@ -19,15 +19,7 @@ export const userSlice = createSlice({
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
     },
-    logout: (state) => {
-      state.user = null;
-      state.accessToken = null;
-      state.isLoggedIn = false;
-      
-      const expire = "Thu, 01 Jan 1970 00:00:00 UTC";
-          document.cookie = `access=; expires=${expire}; path=/;`;
-          document.cookie = `refresh=; expires=${expire}; path=/;`; 
-    },
+    logout: () => initialState,
   },
 });
 

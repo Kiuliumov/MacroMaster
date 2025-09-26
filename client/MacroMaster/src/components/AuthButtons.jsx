@@ -1,19 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
 import Button from "./Button";
 import { useDispatch } from "react-redux";
-import { logout } from "../state_manager/userSlice";
 import { addToast } from "../state_manager/toastSlice";
 import { useAuth } from "../../hooks/useAuth"; 
+import { useLogout } from "../../hooks/useLogout";
 
 export default function AuthButtons() {
   const dispatch = useDispatch();
   const { isLoggedIn } = useAuth();
+  const { logout, loading } = useLogout();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await logout(); 
     dispatch(addToast({ message: "Logout successful!", type: "success" }));
-    navigate('/');
+    navigate("/");
   };
 
   return (
@@ -26,8 +27,9 @@ export default function AuthButtons() {
           <Button
             className="bg-red-400 text-white hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700"
             onClick={handleLogout}
+            disabled={loading}
           >
-            Logout
+            {loading ? "Logging out..." : "Logout"}
           </Button>
         </>
       ) : (
