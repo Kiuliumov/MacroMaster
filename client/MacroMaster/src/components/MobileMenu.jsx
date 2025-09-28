@@ -3,22 +3,22 @@ import NavLink from "../components/NavLink";
 import Button from "../components/Button";
 import { useEffect, useState, useRef } from "react";
 import Logo from "../components/Logo";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addToast } from "../state_manager/toastSlice";
+import { useAuth } from "../../hooks/useAuth";
 import { useLogout } from "../../hooks/useLogout";
-import { logout as logoutAction } from "../state_manager/userSlice";
 
 const publicLinks = ["Home", "Features", "Pricing", "Forum", "About"];
 
 export default function MobileMenu({ setMobileOpen }) {
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { user, isLoggedIn } = useAuth();
+  const { logout, loading } = useLogout();
   const [showMenu, setShowMenu] = useState(false);
   const location = useLocation();
   const firstRender = useRef(true);
   const navigate = useNavigate();
-  const { logout, loading } = useLogout();
-  
+
   useEffect(() => {
     const timeout = setTimeout(() => setShowMenu(true), 10);
     return () => clearTimeout(timeout);
@@ -40,16 +40,10 @@ export default function MobileMenu({ setMobileOpen }) {
   };
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      dispatch(logoutAction());
-      dispatch(addToast({ message: "Logout successful!", type: "success" }));
-      navigate("/");
-      closeMenu();
-    } catch (err) {
-      dispatch(addToast({ message: "Logout failed. Try again.", type: "error" }));
-      console.error("Logout error:", err);
-    }
+    await logout();
+    dispatch(addToast({ message: "Logout successful!", type: "success" }));
+    navigate("/");
+    closeMenu();
   };
 
   return (
@@ -64,11 +58,10 @@ export default function MobileMenu({ setMobileOpen }) {
         }}
       />
 
-      {/* Sidebar */}
       <div
         className={`md:hidden fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg z-40
-                    transform transition-transform duration-300 ease-in-out
-                    ${showMenu ? "translate-x-0" : "-translate-x-full"} flex flex-col`}
+          transform transition-transform duration-300 ease-in-out
+          ${showMenu ? "translate-x-0" : "-translate-x-full"} flex flex-col`}
       >
         <div className="mt-4 px-4">
           <Link to="/" onClick={closeMenu}>
@@ -82,7 +75,7 @@ export default function MobileMenu({ setMobileOpen }) {
               key={item}
               to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
               className="py-2 px-4 rounded-md text-gray-700 dark:text-gray-300 
-                         hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full"
+                hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full"
               onClick={closeMenu}
             >
               {item}
