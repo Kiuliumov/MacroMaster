@@ -5,7 +5,6 @@ import ProgressStatCard from "./ProgressStatCard";
 import {
 	calculateWeightProgress,
 	calculateCalorieProgress,
-	calculateWaterProgress,
 } from "./statsCalculator";
 import { useMotivationalQuote } from "../../../../hooks/useMotivationalQuote";
 
@@ -29,7 +28,6 @@ export default function AccountHero({ user }) {
 
 	const waterConsumed = user?.stats?.water_consumed ?? 0;
 	const waterGoal = 8;
-	const waterProgress = calculateWaterProgress(waterConsumed, waterGoal);
 
 	const streak = user?.stats?.streak ?? 0;
 
@@ -71,13 +69,12 @@ export default function AccountHero({ user }) {
 			</div>
 
 			<div className="grid gap-6 grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-				{/* Top 4 square cards */}
 				<div className="col-span-1">
 					<StatCard
 						icon={<Activity className="h-9 w-9 text-purple-500" />}
 						label="BMI"
 						value={user?.stats?.bmi ?? "N/A"}
-						className="aspect-square rounded-xl"
+						className="h-48 rounded-xl flex flex-col justify-center"
 					/>
 				</div>
 				<div className="col-span-1">
@@ -86,7 +83,7 @@ export default function AccountHero({ user }) {
 						label="Current Weight"
 						value={currentWeight ?? "N/A"}
 						suffix=" kg"
-						className="aspect-square rounded-xl"
+						className="h-48 rounded-xl flex flex-col justify-center"
 					/>
 				</div>
 				<div className="col-span-1">
@@ -95,20 +92,31 @@ export default function AccountHero({ user }) {
 						label="Streak"
 						value={streak}
 						suffix=" days 🔥"
-						className="aspect-square rounded-xl"
+						className="h-48 rounded-xl flex flex-col justify-center"
 					/>
 				</div>
+
 				<div className="col-span-1">
+					<div className="col-span-1">
+						<StatCard
+							icon={<Droplets className="h-9 w-9 text-cyan-500" />}
+							label="Water Intake"
+							value={`${waterConsumed} / ${waterGoal} cups`}
+							className="h-48 rounded-xl flex flex-col justify-center"
+						/>
+					</div>
+				</div>
+
+				<div className="col-span-2 md:col-span-2 xl:col-span-2">
 					<ProgressStatCard
 						icon={<Flame className="h-9 w-9 text-red-500" />}
 						label="Calories"
 						value={`${caloriesConsumed} / ${calorieGoal} kcal`}
 						progress={calorieProgress}
-						className="aspect-square rounded-xl"
+						className="h-48 rounded-xl flex flex-col justify-between"
 					/>
 				</div>
-
-				<div className="col-span-2 md:col-span-3 xl:col-span-4">
+				<div className="col-span-2 md:col-span-3 xl:col-span-2">
 					<ProgressStatCard
 						icon={<Target className="h-9 w-9 text-blue-500" />}
 						label="Target Weight"
