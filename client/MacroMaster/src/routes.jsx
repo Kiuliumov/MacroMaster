@@ -41,7 +41,7 @@ const routes = [
   { path: "/login", element: <GuestRoute><LoginPage /></GuestRoute>, layout: SiteLayout },
   { path: "/register", element: <GuestRoute><RegisterPage /></GuestRoute>, layout: SiteLayout},
   { path: "/forgot-password", element: <GuestRoute><ForgotPasswordPage /></GuestRoute>, layout: SiteLayout },
-  { path: "/activate/:uid/:token", element: <GuestRoute><ActivationSuccess /></GuestRoute>, layout: SiteLayout },
+  { path: "/activate/:uid/:token", element: <ActivationSuccess />, layout: SiteLayout },
   {path: "/reset-password/:uid/:token", element: <GuestRoute><PasswordReset /></GuestRoute>, layout: RegularLayout},
   
   // Protected routes
