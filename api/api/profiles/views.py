@@ -86,7 +86,7 @@ class ActivateAccountView(APIView):
         })
 
         response.set_cookie("access", str(refresh.access_token), httponly=False, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=300)
-        response.set_cookie("refresh", str(refresh), httponly=True, secure=not settings.DEBUG, samesite="Lax", path="/api/auth/", max_age=7*24*60*60)
+        response.set_cookie("refresh", str(refresh), httponly=True, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=7*24*60*60)
         return response
 
 class LoginView(APIView):
