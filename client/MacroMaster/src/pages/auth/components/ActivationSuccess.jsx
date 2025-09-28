@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import CardWrapper from "./CardWrapper";
 import { commonStyles } from "../commonStyles";
-import { setCookie } from "../../../../authentication";
-import { useDispatch, useSelector } from "react-redux";
-import { setUser } from "../../../state_manager/userSlice";
 import { API_BASE_URL } from "../../../config";
+import { useAuth } from "../../../../hooks/useAuth";
 
 export default function ActivationSuccess() {
   const { uid, token } = useParams();
-  const dispatch = useDispatch();
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const { isLoggedIn } = useAuth();
+  const navigate = useNavigate();
 
   const [status, setStatus] = useState("loading");
   const [errorMessage, setErrorMessage] = useState("");
@@ -27,29 +25,16 @@ export default function ActivationSuccess() {
         const res = await fetch(`${API_BASE_URL}/activate/${uid}/${token}/`, {
           method: "GET",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         });
 
         const data = await res.json();
 
         if (!res.ok) {
-          setErrorMessage(
-            data.error || "You do not have permission to activate this account."
-          );
+          setErrorMessage(data.error || "Activation failed.");
           setStatus("forbidden");
           return;
         }
-
-        if (data.access && data.refresh) {
-          setCookie("access", data.access, 1);
-          setCookie("refresh", data.refresh, 7);
-        }
-
-        dispatch(
-          setUser({
-            user: data.user,       
-            access: data.access,
-          })
-        );
 
         setStatus("success");
       } catch (err) {
@@ -59,7 +44,13 @@ export default function ActivationSuccess() {
     }
 
     activateAccount();
-  }, [uid, token, dispatch]);
+  }, [uid, token]);
+
+  useEffect(() => {
+    if (status === "success" && isLoggedIn) {
+      navigate("/dashboard");
+    }
+  }, [status, isLoggedIn, navigate]);
 
   const renderCard = (title, children) => (
     <div className={commonStyles.container}>
@@ -109,20 +100,8 @@ export default function ActivationSuccess() {
 
   return renderCard(
     "Account Activated",
-    <>
-      <p
-        className={commonStyles.textCenter}
-        style={{ fontSize: "1.25rem", marginBottom: "1.5rem" }}
-      >
-        🎉 Your account has been successfully activated! You are now logged in.
-      </p>
-      {isLoggedIn && (
-        <p className={commonStyles.textCenter}>
-          <a href="/dashboard" className={commonStyles.link}>
-            Go to Dashboard
-          </a>
-        </p>
-      )}
-    </>
+    <p className={commonStyles.textCenter} style={{ fontSize: "1.25rem" }}>
+      🎉 Your account has been successfully activated! Redirecting to dashboard...
+    </p>
   );
 }
