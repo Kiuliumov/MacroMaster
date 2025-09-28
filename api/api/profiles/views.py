@@ -46,7 +46,7 @@ class RegisterView(APIView):
 
 
 class ActivateAccountView(APIView):
-    """Activates a user account and returns JWT tokens."""
+    """Activates a user account and logs them in."""
 
     def get(self, request, uidb64, token):
         UserModel = get_user_model()
@@ -62,15 +62,13 @@ class ActivateAccountView(APIView):
         if not default_token_generator.check_token(user, token):
             return Response({"error": "Invalid or expired token"}, status=400)
 
+        # Activate the user
         user.is_active = True
         user.save()
-        refresh = RefreshToken.for_user(user)
 
-        try:
-            profile = Profile.objects.get(user=user)
-            stats = profile.stats
-        except Profile.DoesNotExist:
-            stats = {}
+        # Log the user in using JWT
+        refresh = RefreshToken.for_user(user)
+        profile = Profile.objects.filter(user=user).first()
 
         response = Response({
             "message": "Account activated successfully!",
@@ -81,12 +79,19 @@ class ActivateAccountView(APIView):
                 "last_name": user.last_name,
                 "is_staff": user.is_staff,
                 "is_superuser": user.is_superuser,
-                "stats": stats,
+                "stats": profile.stats if profile else {},
             }
         })
 
-        response.set_cookie("access", str(refresh.access_token), httponly=False, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=300)
-        response.set_cookie("refresh", str(refresh), httponly=True, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=7*24*60*60)
+        response.set_cookie(
+            "access", str(refresh.access_token),
+            httponly=False, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=300
+        )
+        response.set_cookie(
+            "refresh", str(refresh),
+            httponly=True, secure=not settings.DEBUG, samesite="Lax", path="/", max_age=7*24*60*60
+        )
+
         return response
 
 class LoginView(APIView):
