@@ -4,121 +4,130 @@ import Button from "../components/Button";
 import { useEffect, useState, useRef } from "react";
 import Logo from "../components/Logo";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../state_manager/userSlice";
 import { addToast } from "../state_manager/toastSlice";
+import { useLogout } from "../../hooks/useLogout";
+import { logout as logoutAction } from "../state_manager/userSlice";
 
 const publicLinks = ["Home", "Features", "Pricing", "Forum", "About"];
 
 export default function MobileMenu({ setMobileOpen }) {
-	const dispatch = useDispatch();
-	const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-	const [showMenu, setShowMenu] = useState(false);
-	const location = useLocation();
-	const firstRender = useRef(true);
-	let navigate = useNavigate();
-	useEffect(() => {
-		const timeout = setTimeout(() => setShowMenu(true), 10);
-		return () => clearTimeout(timeout);
-	}, []);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+  const [showMenu, setShowMenu] = useState(false);
+  const location = useLocation();
+  const firstRender = useRef(true);
+  const navigate = useNavigate();
+  const { logout, loading } = useLogout();
+  
+  useEffect(() => {
+    const timeout = setTimeout(() => setShowMenu(true), 10);
+    return () => clearTimeout(timeout);
+  }, []);
 
-	useEffect(() => {
-		if (firstRender.current) {
-			firstRender.current = false;
-			return;
-		}
-		setShowMenu(false);
-		const timeout = setTimeout(() => setMobileOpen(false), 300);
-		return () => clearTimeout(timeout);
-	}, [location.pathname, setMobileOpen]);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    setShowMenu(false);
+    const timeout = setTimeout(() => setMobileOpen(false), 300);
+    return () => clearTimeout(timeout);
+  }, [location.pathname, setMobileOpen]);
 
-	const closeMenu = () => {
-		setShowMenu(false);
-		setTimeout(() => setMobileOpen(false), 300);
-	};
+  const closeMenu = () => {
+    setShowMenu(false);
+    setTimeout(() => setMobileOpen(false), 300);
+  };
 
-	const handleLogout = () => {
-		dispatch(logout());
-		dispatch(addToast({ message: "Logout successful!", type: "success" }));
-		navigate("/");
-		closeMenu();
-	};
+  const handleLogout = async () => {
+    try {
+      await logout();
+      dispatch(logoutAction());
+      dispatch(addToast({ message: "Logout successful!", type: "success" }));
+      navigate("/");
+      closeMenu();
+    } catch (err) {
+      dispatch(addToast({ message: "Logout failed. Try again.", type: "error" }));
+      console.error("Logout error:", err);
+    }
+  };
 
-	return (
-		<>
-			<div
-				onClick={closeMenu}
-				style={{
-					position: "fixed",
-					inset: 0,
-					backgroundColor: "rgba(0, 0, 0, 0.15)",
-					zIndex: 30,
-				}}
-			/>
+  return (
+    <>
+      <div
+        onClick={closeMenu}
+        style={{
+          position: "fixed",
+          inset: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.15)",
+          zIndex: 30,
+        }}
+      />
 
-			<div
-				className={`md:hidden fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg z-40
+      {/* Sidebar */}
+      <div
+        className={`md:hidden fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-900 shadow-lg z-40
                     transform transition-transform duration-300 ease-in-out
-                    ${
-											showMenu ? "translate-x-0" : "-translate-x-full"
-										} flex flex-col`}
-			>
-				<div className="mt-4 px-4">
-					<Link to="/" onClick={closeMenu}>
-						<Logo className="h-10 w-auto" />
-					</Link>
-				</div>
+                    ${showMenu ? "translate-x-0" : "-translate-x-full"} flex flex-col`}
+      >
+        <div className="mt-4 px-4">
+          <Link to="/" onClick={closeMenu}>
+            <Logo className="h-10 w-auto" />
+          </Link>
+        </div>
 
-				<div className="flex flex-col mt-8 px-4 space-y-3 flex-grow">
-					{publicLinks.map((item) => (
-						<NavLink
-							key={item}
-							to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
-							className="py-2 px-4 rounded-md text-gray-700 dark:text-gray-300 
+        <div className="flex flex-col mt-8 px-4 space-y-3 flex-grow">
+          {publicLinks.map((item) => (
+            <NavLink
+              key={item}
+              to={item === "Home" ? "/" : `/${item.toLowerCase()}`}
+              className="py-2 px-4 rounded-md text-gray-700 dark:text-gray-300 
                          hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full"
-							onClick={closeMenu}
-						>
-							{item}
-						</NavLink>
-					))}
-				</div>
+              onClick={closeMenu}
+            >
+              {item}
+            </NavLink>
+          ))}
+        </div>
 
-				<div className="flex flex-col px-4 pb-6 space-y-2">
-					{isLoggedIn ? (
-						<>
-							<Button
-								to="/dashboard"
-								className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-70 flex items-center justify-center"
-								onClick={closeMenu}
-							>
-								Dashboard
-							</Button>
-							<Button
-								className="w-full max-w-xs block px-4 py-2 text-sm bg-red-400 text-white hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 mx-auto flex items-center justify-center"
-								onClick={handleLogout}
-							>
-								Logout
-							</Button>
-						</>
-					) : (
-						<>
-							<Button
-								to="/login"
-								className="w-full px-4 py-2 text-sm bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 flex items-center justify-center"
-								onClick={closeMenu}
-							>
-								Log In
-							</Button>
-							<Button
-								to="/register"
-								className="w-full px-4 py-2 text-sm bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center justify-center"
-								onClick={closeMenu}
-							>
-								Sign Up
-							</Button>
-						</>
-					)}
-				</div>
-			</div>
-		</>
-	);
+        <div className="flex flex-col px-4 pb-6 space-y-2">
+          {isLoggedIn ? (
+            <>
+              <Button
+                to="/dashboard"
+                className="w-full px-4 py-2 text-sm bg-green-400 text-white hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-700 flex items-center justify-center"
+                onClick={closeMenu}
+              >
+                Dashboard
+              </Button>
+              <Button
+                className="w-full max-w-xs block px-4 py-2 text-sm bg-red-400 text-white hover:bg-red-500 dark:bg-red-600 dark:hover:bg-red-700 mx-auto flex items-center justify-center"
+                onClick={handleLogout}
+                disabled={loading}
+              >
+                {loading ? "Logging out..." : "Logout"}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                to="/login"
+                className="w-full px-4 py-2 text-sm bg-blue-400 text-white hover:bg-blue-500 dark:bg-blue-600 dark:hover:bg-blue-700 flex items-center justify-center"
+                onClick={closeMenu}
+              >
+                Log In
+              </Button>
+              <Button
+                to="/register"
+                className="w-full px-4 py-2 text-sm bg-blue-300 text-white hover:bg-blue-400 dark:bg-blue-500 dark:hover:bg-blue-600 flex items-center justify-center"
+                onClick={closeMenu}
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
 }
