@@ -43,7 +43,7 @@ class Profile(models.Model):
 
     # Reset
     water_consumed = models.FloatField(null=True, blank=True, default=0)
-    streak = models.PositiveIntegerField(null=True, blank=True)
+    streak = models.PositiveIntegerField(null=True, blank=True, default=1)
     calories_consumed = models.PositiveIntegerField(null=True, blank=True)
     calories_burnt = models.PositiveIntegerField(null=True, blank=True)
 
