@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser, setAccessToken } from "../src/state_manager/userSlice";
+import { setUser, setAccessToken, logout } from "../src/state_manager/userSlice";
 import { API_BASE_URL } from "../src/config";
 
 export function useAuth() {
@@ -9,7 +9,8 @@ export function useAuth() {
   const accessToken = useSelector((state) => state.user.accessToken);
 
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const isLoggedIn = !!user;
 
   useEffect(() => {
     async function rehydrateUser() {
@@ -26,70 +27,39 @@ export function useAuth() {
           });
 
           if (!refreshRes.ok) {
-            dispatch(setUser(null));
-            dispatch(setAccessToken(null));
-            setIsLoggedIn(false);
-            setLoading(false);
+            dispatch(logout());
             return;
           }
 
           const { access: newAccess } = await refreshRes.json();
-          if (!newAccess) throw new Error("No access token returned from refresh");
-
-          dispatch(setAccessToken(newAccess));
           token = newAccess;
+          dispatch(setAccessToken(newAccess));
         }
 
-        let meRes = await fetch(`${API_BASE_URL}/me/`, {
+        const meRes = await fetch(`${API_BASE_URL}/me/`, {
           headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
         });
 
         if (!meRes.ok) {
-          const refreshRes = await fetch(`${API_BASE_URL}/auth/refresh/`, {
-            method: "POST",
-            credentials: "include",
-          });
-
-          if (!refreshRes.ok) {
-            dispatch(setUser(null));
-            dispatch(setAccessToken(null));
-            setIsLoggedIn(false);
-            setLoading(false);
-            return;
-          }
-
-          const { access: newAccess } = await refreshRes.json();
-          if (!newAccess) throw new Error("No access token returned from refresh");
-
-          dispatch(setAccessToken(newAccess));
-          token = newAccess;
-
-          meRes = await fetch(`${API_BASE_URL}/me/`, {
-            headers: { Authorization: `Bearer ${newAccess}` },
-            credentials: "include",
-          });
-
-          if (!meRes.ok) throw new Error("Failed to fetch user after refresh");
+          dispatch(logout());
+          return;
         }
 
         const data = await meRes.json();
-        if (!data.user) throw new Error("Unexpected /me/ response shape");
+        if (!data.user) throw new Error("Invalid /me/ response");
 
         dispatch(setUser({ user: data.user, access: token }));
-        setIsLoggedIn(true);
       } catch (err) {
         console.error("Could not rehydrate user:", err);
-        dispatch(setUser(null));
-        dispatch(setAccessToken(null));
-        setIsLoggedIn(false);
+        dispatch(logout());
       } finally {
         setLoading(false);
       }
     }
 
     rehydrateUser();
-  }, [dispatch, accessToken]);
+  }, [dispatch]);
 
   return { user, isLoggedIn, token: accessToken, loading };
 }
