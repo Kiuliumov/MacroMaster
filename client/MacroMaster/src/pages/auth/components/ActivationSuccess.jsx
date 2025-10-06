@@ -12,6 +12,7 @@ export default function ActivationSuccess() {
 
   const [status, setStatus] = useState("loading");
   const [errorMessage, setErrorMessage] = useState("");
+  const redirectToOnboarding = () => {setTimeout(5000, navigate('/onboarding'))};
 
   useEffect(() => {
     if (!uid || !token) {
@@ -97,11 +98,11 @@ export default function ActivationSuccess() {
       </>
     );
   }
-
+  redirectToOnboarding();
   return renderCard(
     "Account Activated",
     <p className={commonStyles.textCenter} style={{ fontSize: "1.25rem" }}>
-      🎉 Your account has been successfully activated! Redirecting to dashboard...
+      🎉 Your account has been successfully activated! Redirecting to onboarding...
     </p>
   );
 }
