@@ -32,7 +32,7 @@ export default function ContactMessagesPage() {
 
   const deleteMessage = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/messages/${id}`, { method: "DELETE" });
+      const response = await fetch(`${API_BASE_URL}/contact-messages/${id}/`, { method: "DELETE" });
       if (!response.ok) throw new Error("Failed to delete message");
 
       setMessages((prev) => prev.filter((msg) => msg.id !== id));
