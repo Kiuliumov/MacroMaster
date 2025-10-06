@@ -1,5 +1,4 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 
 const PostForm = ({ onPostCreated }) => {
   const [post, setPost] = useState({ title: "", body: "" });
@@ -7,7 +6,13 @@ const PostForm = ({ onPostCreated }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("/api/posts/", post);
+      await fetch("/api/posts/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(post),
+      });
       setPost({ title: "", body: "" });
       onPostCreated();
     } catch (err) {
