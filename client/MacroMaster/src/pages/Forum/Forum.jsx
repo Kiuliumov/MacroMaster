@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import PostForm from "./PostForm";
 import PostCard from "./PostCard";
 
@@ -8,8 +7,9 @@ const Forum = () => {
 
   const fetchPosts = async () => {
     try {
-      const res = await axios.get("/api/posts/");
-      setPosts(res.data);
+      const res = await fetch("/api/posts/");
+      const data = await res.json();
+      setPosts(data);
     } catch (err) {
       console.error(err);
     }
