@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { supportStyles } from "../styles";
+import { API_BASE_URL } from "../../../config";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -19,7 +20,18 @@ export default function ContactForm() {
     setStatus("Sending...");
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      const response = await fetch(`${API_BASE_URL}/contact-messages/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
       setStatus("✅ Message sent successfully!");
       setFormData({ name: "", email: "", subject: "", message: "" });
     } catch (err) {
