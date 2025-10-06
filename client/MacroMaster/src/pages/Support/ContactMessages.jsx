@@ -2,15 +2,8 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addToast } from "../../state_manager/toastSlice";
 import { supportStyles } from "./styles";
+import { API_BASE_URL } from "../../config";
 
-const mockMessages = Array.from({ length: 42 }, (_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-  email: `user${i + 1}@example.com`,
-  subject: `Subject ${i + 1}`,
-  message: `This is the detailed content of message number ${i + 1}. It can be long and include all information sent by the user.`,
-  created_at: new Date(Date.now() - i * 10000000).toISOString(),
-}));
 
 export default function ContactMessagesPage() {
   const [messages, setMessages] = useState([]);
@@ -23,15 +16,23 @@ export default function ContactMessagesPage() {
   const messagesPerPage = 6;
 
   useEffect(() => {
-    setMessages(mockMessages);
-  }, []);
+    const fetchMessages = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/contact-messages/`);
+        if (!response.ok) throw new Error("Failed to fetch messages");
+        const data = await response.json();
+        setMessages(data);
+      } catch (error) {
+        dispatch(addToast({ message: error.message || "Failed to load messages", type: "error" }));
+      }
+    };
+
+    fetchMessages();
+  }, [dispatch]);
 
   const deleteMessage = async (id) => {
     try {
-      const response = await fetch(`/api/messages/${id}`, {
-        method: "DELETE",
-      });
-
+      const response = await fetch(`${API_BASE_URL}/messages/${id}`, { method: "DELETE" });
       if (!response.ok) throw new Error("Failed to delete message");
 
       setMessages((prev) => prev.filter((msg) => msg.id !== id));
@@ -43,7 +44,6 @@ export default function ContactMessagesPage() {
     }
   };
 
-  // Sorting
   const sortMessages = (field) => {
     const order = sortField === field && sortOrder === "asc" ? "desc" : "asc";
     setSortField(field);
@@ -75,9 +75,9 @@ export default function ContactMessagesPage() {
         </p>
       </div>
 
-      <div className="w-full max-w-6xl mx-auto grid lg:grid-cols-2 gap-6">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-hidden">
-          <table className="w-full text-left border-collapse text-sm">
+      <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row gap-6">
+        <div className="flex-1 bg-white dark:bg-gray-900 rounded-2xl shadow-xl overflow-auto">
+          <table className="w-full text-left border-collapse text-sm min-w-[600px] lg:min-w-full">
             <thead className="bg-gray-200 dark:bg-gray-800">
               <tr>
                 {["id", "name", "email", "subject", "created_at"].map((field) => (
@@ -90,7 +90,9 @@ export default function ContactMessagesPage() {
                     {sortField === field ? (sortOrder === "asc" ? " 🔼" : " 🔽") : ""}
                   </th>
                 ))}
-                <th className="p-2 border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white">Actions</th>
+                <th className="p-2 border-b border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -125,9 +127,9 @@ export default function ContactMessagesPage() {
             </tbody>
           </table>
 
-          <div className="flex justify-center mt-4 space-x-2 mb-4">
+          <div className="flex flex-wrap justify-center mt-4 space-x-1 mb-4">
             <button
-              className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
+              className="px-2 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
             >
@@ -136,10 +138,10 @@ export default function ContactMessagesPage() {
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i + 1}
-                className={`px-3 py-1 rounded ${
+                className={`px-2 py-1 rounded ${
                   currentPage === i + 1
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-200 dark:bg-gray-700"
+                    : "bg-gray-200 dark:bg-gray-700 dark:text-white"
                 }`}
                 onClick={() => setCurrentPage(i + 1)}
               >
@@ -147,7 +149,7 @@ export default function ContactMessagesPage() {
               </button>
             ))}
             <button
-              className="px-3 py-1 bg-gray-200 dark:bg-gray-700 rounded disabled:opacity-50"
+              className="px-2 py-1 bg-gray-200 dark:bg-gray-700 dark:text-white rounded disabled:opacity-50"
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
             >
@@ -156,7 +158,7 @@ export default function ContactMessagesPage() {
           </div>
         </div>
 
-        <div className="bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-inner p-4 flex flex-col h-full min-h-[400px]">
+        <div className="flex-1 bg-gray-50 dark:bg-gray-900 rounded-2xl shadow-inner p-4 flex flex-col h-full min-h-[400px]">
           {selectedMessage ? (
             <>
               <div className="flex justify-between items-start mb-2">
@@ -179,7 +181,7 @@ export default function ContactMessagesPage() {
               </div>
             </>
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-300 text-sm">
+            <div className="flex items-center justify-center h-full text-gray-500 dark:text-gray-300 text-sm text-center px-2">
               Select a message to see details
             </div>
           )}
