@@ -1,10 +1,12 @@
-import axios from "axios";
+import React from "react";
 import CommentList from "./CommentList";
 
 const PostCard = ({ post, onLike }) => {
   const toggleLike = async () => {
     try {
-      await axios.post(`/api/posts/${post.id}/like/`);
+      await fetch(`/api/posts/${post.id}/like/`, {
+        method: "POST",
+      });
       onLike();
     } catch (err) {
       console.error(err);
