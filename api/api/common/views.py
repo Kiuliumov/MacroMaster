@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework import generics, permissions
 from .models import ContactMessage
 from .serializers import ContactMessageSerializer
-from permissions import IsJWTAdmin
+from .permissions import IsJWTAdmin
 
 class ContactMessageListCreateView(generics.ListCreateAPIView):
     """
@@ -13,4 +13,3 @@ class ContactMessageListCreateView(generics.ListCreateAPIView):
     """
     queryset = ContactMessage.objects.all().order_by('-id')
     serializer_class = ContactMessageSerializer
-    permission_classes = [IsJWTAdmin]
