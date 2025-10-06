@@ -1,10 +1,6 @@
-from django.shortcuts import render
-
-# Create your views here.
-from rest_framework import generics, permissions
+from rest_framework import generics
 from .models import ContactMessage
 from .serializers import ContactMessageSerializer
-from .permissions import IsJWTAdmin
 
 class ContactMessageListCreateView(generics.ListCreateAPIView):
     """
@@ -12,4 +8,13 @@ class ContactMessageListCreateView(generics.ListCreateAPIView):
     POST: Submit a new contact message
     """
     queryset = ContactMessage.objects.all().order_by('-id')
+    serializer_class = ContactMessageSerializer
+
+
+class ContactMessageDetailView(generics.RetrieveDestroyAPIView):
+    """
+    GET: Retrieve a specific message (optional)
+    DELETE: Delete a specific message by ID
+    """
+    queryset = ContactMessage.objects.all()
     serializer_class = ContactMessageSerializer
