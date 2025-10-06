@@ -5,6 +5,7 @@ import RegularLayout from "./layouts/RegularLayout";
 import SiteLayout from "./layouts/SiteLayout";
 import Onboarding from "./pages/Auth/Onboarding/Onboarding";
 import Forum from "./pages/Forum/Forum";
+import ContactMessagesPage from "./pages/Support/ContactMessages";
 
 // --- Public Pages ---
 const Homepage = lazy(() => import("./pages/Home/Homepage"));
@@ -35,6 +36,7 @@ const routes = [
   { path: "/careers", element: <CareersPage />, layout: SiteLayout },
   { path: "/pricing", element: <PricingPage />, layout: SiteLayout },
   { path: "/support", element: <SupportPage />, layout: SiteLayout },
+  { path: "/contact-messages", element: <ContactMessagesPage />, layout: SiteLayout },
   { path: "/features", element: <FeaturesPage />, layout: SiteLayout },
   { path: "/policy", element: <PrivacyPolicy />, layout: SiteLayout },
 
