@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import PostForm from "./PostForm";
 import PostCard from "./PostCard";
 
+const ForumStyles = {
+  container: "max-w-5xl mx-auto py-12 px-4 space-y-12",
+  heading: "text-4xl font-bold text-center text-green-500 mb-8",
+  postsWrapper: "flex flex-col gap-8",
+};
+
 const Forum = () => {
   const [posts, setPosts] = useState([]);
 
@@ -20,35 +26,16 @@ const Forum = () => {
   }, []);
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Forum</h1>
+    <div className={ForumStyles.container}>
+      <h1 className={ForumStyles.heading}>Forum</h1>
       <PostForm onPostCreated={fetchPosts} />
-      <div style={styles.postsWrapper}>
+      <div className={ForumStyles.postsWrapper}>
         {posts.map((post) => (
           <PostCard key={post.id} post={post} onLike={fetchPosts} />
         ))}
       </div>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    maxWidth: "64rem",
-    margin: "0 auto",
-    padding: "3rem 1rem",
-  },
-  heading: {
-    fontSize: "2.5rem",
-    fontWeight: "700",
-    textAlign: "center",
-    marginBottom: "2rem",
-  },
-  postsWrapper: {
-    display: "flex",
-    flexDirection: "column",
-    gap: "2rem",
-  },
 };
 
 export default Forum;
