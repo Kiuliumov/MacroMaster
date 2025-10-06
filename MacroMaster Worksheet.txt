@@ -1,0 +1,17 @@
+IMPORTANT -----> Finish the Forum page, Finish the Forum logic, Finish the Dashboard Page, Finish the Dashboard.
+
+
+Fix visual bugs in the onboarding.
+
+Work on better authentication.
+
+
+Finish the python Django logic for gamification.
+
+Fix the visual bugs in logged in.
+
+Finish the contact messages.
+
+Add links in the footer for socials.
+
+Fix the refresh logic.
