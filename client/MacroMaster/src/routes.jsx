@@ -4,6 +4,7 @@ import GuestRoute from "./route_components/GuestRoute";
 import RegularLayout from "./layouts/RegularLayout";
 import SiteLayout from "./layouts/SiteLayout";
 import Onboarding from "./pages/Auth/Onboarding/Onboarding";
+import Forum from "./pages/Forum/Forum";
 
 // --- Public Pages ---
 const Homepage = lazy(() => import("./pages/Home/Homepage"));
@@ -47,6 +48,7 @@ const routes = [
   // Protected routes
   { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute>, layout: SiteLayout },
   { path: "/onboarding", element: <ProtectedRoute><Onboarding  /></ProtectedRoute>, layout: RegularLayout },
+  { path: "/forum", element: <ProtectedRoute><Forum /></ProtectedRoute>, layout: SiteLayout },
 
   // Catch-all
   { path: "*", element: <NotFoundPage />, layout: SiteLayout },
