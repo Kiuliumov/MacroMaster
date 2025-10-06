@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Post(models.Model):
     author = models.ForeignKey(
-        'Profile', on_delete=models.CASCADE, related_name='posts'
+        'profiles.Profile', on_delete=models.CASCADE, related_name='posts'
     )
     title = models.CharField(max_length=200)
     slug = models.SlugField(unique=True, blank=True)
@@ -16,7 +16,7 @@ class Post(models.Model):
     tags = models.CharField(max_length=250, blank=True, null=True, help_text="Comma-separated tags")
 
     users_liked = models.ManyToManyField(
-        'Profile', related_name='liked_posts', blank=True
+        'profiles.Profile', related_name='liked_posts', blank=True
     )
 
     views = models.PositiveIntegerField(default=0)
@@ -55,7 +55,7 @@ class Comment(models.Model):
         'Post', on_delete=models.CASCADE, related_name='comments'
     )
     author = models.ForeignKey(
-        'Profile', on_delete=models.CASCADE, related_name='comments'
+        'profiles.Profile', on_delete=models.CASCADE, related_name='comments'
     )
     parent = models.ForeignKey(
         'self', null=True, blank=True, related_name='replies', on_delete=models.CASCADE
@@ -63,7 +63,7 @@ class Comment(models.Model):
     body = models.TextField()
     image = models.ImageField(upload_to='comments/images/', blank=True, null=True)
     users_liked = models.ManyToManyField(
-        'Profile', related_name='liked_comments', blank=True
+        'profiles.Profile', related_name='liked_comments', blank=True
     )
 
     is_edited = models.BooleanField(default=False)
