@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'profiles',
     'forum',
+    'django_filters',
     'corsheaders',
 ]
 
