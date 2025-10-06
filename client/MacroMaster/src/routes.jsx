@@ -6,6 +6,8 @@ import SiteLayout from "./layouts/SiteLayout";
 import Onboarding from "./pages/Auth/Onboarding/Onboarding";
 import Forum from "./pages/Forum/Forum";
 import ContactMessagesPage from "./pages/Support/ContactMessages";
+import AdminRoute from "./route_components/AdminRoute";
+
 
 // --- Public Pages ---
 const Homepage = lazy(() => import("./pages/Home/Homepage"));
@@ -36,7 +38,6 @@ const routes = [
   { path: "/careers", element: <CareersPage />, layout: SiteLayout },
   { path: "/pricing", element: <PricingPage />, layout: SiteLayout },
   { path: "/support", element: <SupportPage />, layout: SiteLayout },
-  { path: "/contact-messages", element: <ContactMessagesPage />, layout: SiteLayout },
   { path: "/features", element: <FeaturesPage />, layout: SiteLayout },
   { path: "/policy", element: <PrivacyPolicy />, layout: SiteLayout },
 
@@ -51,6 +52,10 @@ const routes = [
   { path: "/dashboard", element: <ProtectedRoute><DashboardPage /></ProtectedRoute>, layout: SiteLayout },
   { path: "/onboarding", element: <ProtectedRoute><Onboarding  /></ProtectedRoute>, layout: RegularLayout },
   { path: "/forum", element: <ProtectedRoute><Forum /></ProtectedRoute>, layout: SiteLayout },
+
+  // Private routes
+    { path: "/contact-messages", element: <AdminRoute><ContactMessagesPage /></AdminRoute>, layout: SiteLayout },
+
 
   // Catch-all
   { path: "*", element: <NotFoundPage />, layout: SiteLayout },
