@@ -5,7 +5,6 @@ import RegularLayout from "./layouts/RegularLayout";
 import SiteLayout from "./layouts/SiteLayout";
 import Onboarding from "./pages/Auth/Onboarding/Onboarding";
 import Forum from "./pages/Forum/Forum";
-import ContactMessagesPage from "./pages/Support/ContactMessages";
 import AdminRoute from "./route_components/AdminRoute";
 
 
@@ -28,6 +27,10 @@ const PasswordReset = lazy(() => import("./pages/Auth/PasswordReset"));
 
 // --- Dashboard Pages ---
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
+
+// --- Private --- 
+
+const ContactMessagesPage = lazy(() => import("./pages/Support/ContactMessages/ContactMessages"));
 
 // --- Route Config ---
 
