@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { addToast } from "../../state_manager/toastSlice";
+import { addToast } from "../../../state_manager/toastSlice";
 import { supportStyles } from "./styles";
-import { API_BASE_URL } from "../../config";
+import { API_BASE_URL } from "../../../config";
 
 export default function ContactMessagesPage() {
 	const [messages, setMessages] = useState([]);
