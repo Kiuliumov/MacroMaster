@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'common',
     'forum',
     'django_filters',
+    'channels',
     'corsheaders',
 ]
 
@@ -78,6 +79,16 @@ FRONTEND_URL = "http://localhost:5173"
 ROOT_URLCONF = 'api.urls'
 AUTH_USER_MODEL = 'profiles.UserModel'
 
+ASGI_APPLICATION = "api.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
