@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supportStyles } from "../styles";
 import { API_BASE_URL } from "../../../config";
 
@@ -11,32 +11,50 @@ export default function ContactForm() {
   });
   const [status, setStatus] = useState("");
 
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    const wsProtocol = API_BASE_URL.startsWith("https") ? "wss" : "ws";
+    const wsUrl = API_BASE_URL.replace(/^http(s)?:/, wsProtocol + ":") + "/contact-messages/";
+
+    socketRef.current = new WebSocket(wsUrl);
+
+    socketRef.current.onopen = () => {
+      console.log("WebSocket connected");
+    };
+
+    socketRef.current.onclose = () => {
+      console.log("WebSocket disconnected");
+    };
+
+    socketRef.current.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
+    return () => socketRef.current.close();
+  }, []);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setStatus("Sending...");
 
-    try {
-      const response = await fetch(`${API_BASE_URL}/contact-messages/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      setStatus("✅ Message sent successfully!");
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch (err) {
-      setStatus("❌ Something went wrong. Please try again. " + err.message);
+    if (!socketRef.current || socketRef.current.readyState !== WebSocket.OPEN) {
+      setStatus("❌ WebSocket not connected");
+      return;
     }
+
+    socketRef.current.send(
+      JSON.stringify({
+        action: "create",
+        ...formData,
+      })
+    );
+
+    setStatus("✅ Message sent via WebSocket!");
+    setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
   return (
