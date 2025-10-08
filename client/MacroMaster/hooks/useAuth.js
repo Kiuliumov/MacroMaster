@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser, setAccessToken, logout } from "../src/state_manager/userSlice";
 import { API_BASE_URL } from "../src/config";
@@ -7,26 +7,30 @@ export function useAuth() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.user);
   const accessToken = useSelector((state) => state.user.accessToken);
-
   const [loading, setLoading] = useState(true);
+  const hasRehydrated = useRef(false);
+
   const isLoggedIn = !!user;
 
   useEffect(() => {
+    if (hasRehydrated.current) return;
+    hasRehydrated.current = true;
+
     async function rehydrateUser() {
       setLoading(true);
 
-      let token = accessToken || 
+      let token =
+        accessToken ||
         document.cookie
           .split("; ")
           .find((c) => c.startsWith("access="))
           ?.split("=")[1];
 
-      async function fetchMeWithToken(token) {
-        return fetch(`${API_BASE_URL}/me/`, {
+      const fetchMeWithToken = (token) =>
+        fetch(`${API_BASE_URL}/me/`, {
           headers: { Authorization: `Bearer ${token}` },
           credentials: "include",
         });
-      }
 
       try {
         let meRes = await fetchMeWithToken(token);
