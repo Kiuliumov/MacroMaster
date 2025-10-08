@@ -1,8 +1,8 @@
 export default function StepForm({ step, value, error, onChange }) {
   const numberFieldProps = {
-    weight: { min: 45, max: 120, step: 1, default: 60 },
-    height: { min: 150, max: 200, step: 1, default: 170 },
-    age: { min: 18, max: 80, step: 1, default: 25 },
+    weight: { min: 45, max: 120, step: 1 },
+    height: { min: 150, max: 200, step: 1 },
+    age: { min: 18, max: 80, step: 1 },
   };
 
   const inputClasses =
@@ -11,12 +11,15 @@ export default function StepForm({ step, value, error, onChange }) {
   const fillPercentage = () => {
     if (!numberFieldProps[step.field]) return 0;
     const { min, max } = numberFieldProps[step.field];
-    return ((value - min) / (max - min)) * 100;
+    const val = Number(value ?? min); // Use min as default
+    return ((val - min) / (max - min)) * 100;
   };
 
   const handleSliderChange = (field, val) => {
     onChange(field, Number(val));
   };
+
+  const displayValue = Number(value ?? numberFieldProps[step.field]?.min);
 
   return (
     <div className="transition-all duration-500">
@@ -31,20 +34,22 @@ export default function StepForm({ step, value, error, onChange }) {
               <span>{numberFieldProps[step.field].min}</span>
               <span>{numberFieldProps[step.field].max}</span>
             </div>
+
             <input
               type="range"
               min={numberFieldProps[step.field].min}
               max={numberFieldProps[step.field].max}
               step={numberFieldProps[step.field].step}
-              value={value || numberFieldProps[step.field].default}
+              value={displayValue}
               onChange={(e) => handleSliderChange(step.field, e.target.value)}
               className={inputClasses}
               style={{
-                background: `linear-gradient(to right, #7c3aed ${fillPercentage()}%, #d1d5db ${fillPercentage()}%)`,
+                background: `linear-gradient(to right, #7c3aed ${fillPercentage()}%, #d1d5db ${fillPercentage()}% 100%)`,
               }}
             />
+
             <div className="mt-2 text-center text-gray-700 dark:text-gray-300 font-medium text-lg">
-              {value || numberFieldProps[step.field].default}{" "}
+              {displayValue}{" "}
               {step.field === "weight"
                 ? "kg"
                 : step.field === "height"
