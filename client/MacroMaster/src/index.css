@@ -1,15 +1,40 @@
 @import "tailwindcss";
+
+/* Custom dark variant for Tailwind */
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* Prevent textarea resizing */
 textarea {
   resize: none;
 }
 
+/* Make buttons and links show pointer cursor */
 button,
 a {
-cursor: pointer;
+  cursor: pointer;
 }
 
+/* Remove number input arrows in Chrome, Edge, Safari */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* Remove number input arrows in Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: none; /* standard */
+}
+
+/* Optional: remove any residual spin buttons in Safari/Opera */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Animations */
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -28,12 +53,13 @@ cursor: pointer;
   animation: slide-down 0.8s ease forwards;
 }
 
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+/* Optional: hide number input dropdown arrow completely in Safari */
+.number-wrapper {
+  overflow: hidden;
+  display: inline-block;
 }
-
-input[type='number'] {
-  -moz-appearance: textfield; /* Firefox */
+.number-wrapper input[type='number'] {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
 }
