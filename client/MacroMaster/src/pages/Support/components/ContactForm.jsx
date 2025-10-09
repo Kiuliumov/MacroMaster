@@ -10,25 +10,25 @@ export default function ContactForm() {
     message: "",
   });
   const [status, setStatus] = useState("");
-
   const socketRef = useRef(null);
 
   useEffect(() => {
     const wsProtocol = API_BASE_URL.startsWith("https") ? "wss" : "ws";
-    const wsUrl = API_BASE_URL.replace(/^http(s)?:/, wsProtocol + ":") + "/contact-messages/";
+    const wsUrl =
+      API_BASE_URL.replace(/^http(s)?:/, wsProtocol + ":") +
+      "/ws/contact-messages/";
 
     socketRef.current = new WebSocket(wsUrl);
 
-    socketRef.current.onopen = () => {
-      console.log("WebSocket connected");
-    };
+    socketRef.current.onopen = () => setStatus("🟢 Connected to server");
+    socketRef.current.onclose = () => setStatus("🔴 Disconnected from server");
+    socketRef.current.onerror = () => setStatus("⚠️ WebSocket error");
 
-    socketRef.current.onclose = () => {
-      console.log("WebSocket disconnected");
-    };
-
-    socketRef.current.onerror = (err) => {
-      console.error("WebSocket error:", err);
+    socketRef.current.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.action === "create") {
+        setStatus("✅ Message created!");
+      }
     };
 
     return () => socketRef.current.close();
@@ -53,7 +53,7 @@ export default function ContactForm() {
       })
     );
 
-    setStatus("✅ Message sent via WebSocket!");
+    setStatus("✅ Message sent!");
     setFormData({ name: "", email: "", subject: "", message: "" });
   };
 
