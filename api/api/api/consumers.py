@@ -9,6 +9,11 @@ class ContactMessageConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(self.group_name, self.channel_name)
         await self.accept()
 
+        messages = await self.get_all_messages()
+        await self.send(
+            text_data=json.dumps({"action": "init", "messages": messages})
+        )
+
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
@@ -17,39 +22,64 @@ class ContactMessageConsumer(AsyncWebsocketConsumer):
         action = data.get("action")
 
         if action == "create":
-            await self.create_contact_message(data)
+            message_obj = await self.create_contact_message(data)
+            await self.channel_layer.group_send(
+                self.group_name,
+                {
+                    "type": "broadcast_message",
+                    "action": "create",
+                    "message": self.message_to_dict(message_obj),
+                },
+            )
 
-        await self.channel_layer.group_send(
-            self.group_name,
-            {
-                "type": "broadcast_message",
-                "action": action,
-                "message": data.get("message"),
-            }
-        )
+        elif action == "delete":
+            message_id = data.get("id")
+            deleted = await self.delete_contact_message(message_id)
+            if deleted:
+                await self.channel_layer.group_send(
+                    self.group_name,
+                    {
+                        "type": "broadcast_message",
+                        "action": "delete",
+                        "id": message_id,
+                    },
+                )
 
     async def broadcast_message(self, event):
-        await self.send(
-            text_data=json.dumps(
-                {
-                    "action": event["action"],
-                    "message": event["message"],
-                }
-            )
-        )
+        await self.send(text_data=json.dumps(event))
 
     @sync_to_async
     def create_contact_message(self, data):
         from common.models import ContactMessage
-
-        name = data.get("name", "")
-        email = data.get("email", "")
-        subject = data.get("subject", "")
-        message = data.get("message", "")
-
         return ContactMessage.objects.create(
-            name=name,
-            email=email,
-            subject=subject,
-            message=message,
+            name=data.get("name", ""),
+            email=data.get("email", ""),
+            subject=data.get("subject", ""),
+            message=data.get("message", ""),
         )
+
+    @sync_to_async
+    def delete_contact_message(self, message_id):
+        from common.models import ContactMessage
+        try:
+            obj = ContactMessage.objects.get(id=message_id)
+            obj.delete()
+            return True
+        except ContactMessage.DoesNotExist:
+            return False
+
+    @sync_to_async
+    def get_all_messages(self):
+        from common.models import ContactMessage
+        return [self.message_to_dict(m) for m in ContactMessage.objects.all()]
+
+    def message_to_dict(self, message_obj):
+        from common.models import ContactMessage
+        return {
+            "id": message_obj.id,
+            "name": message_obj.name,
+            "email": message_obj.email,
+            "subject": message_obj.subject,
+            "message": message_obj.message,
+            "created_at": message_obj.created_at.isoformat(),
+        }
