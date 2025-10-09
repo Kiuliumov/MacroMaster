@@ -11,7 +11,7 @@ export default function StepForm({ step, value, error, onChange }) {
   const fillPercentage = () => {
     if (!numberFieldProps[step.field]) return 0;
     const { min, max } = numberFieldProps[step.field];
-    const val = Number(value ?? min); // Use min as default
+    const val = Number(value ?? min);
     return ((val - min) / (max - min)) * 100;
   };
 
@@ -64,7 +64,7 @@ export default function StepForm({ step, value, error, onChange }) {
             <select
               value={value}
               onChange={(e) => onChange(step.field, e.target.value)}
-              className="w-full px-5 py-3 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500"
+              className="w-full px-5 py-3 rounded-2xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-300 dark:border-gray-700 cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-500 appearance-none"
             >
               {step.options.map((opt) => (
                 <option key={opt} value={opt}>
@@ -72,14 +72,17 @@ export default function StepForm({ step, value, error, onChange }) {
                 </option>
               ))}
             </select>
-            <span className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-gray-400">
+
+            <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
               ▼
             </span>
           </div>
         )}
       </div>
 
-      {error && <p className="text-red-500 text-sm mb-4 animate-pulse">{error}</p>}
+      {error && (
+        <p className="text-red-500 text-sm mb-4 animate-pulse">{error}</p>
+      )}
     </div>
   );
 }
