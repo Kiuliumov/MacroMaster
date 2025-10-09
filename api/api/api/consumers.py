@@ -82,7 +82,7 @@ class ContactMessageConsumer(AsyncWebsocketConsumer):
         return [self.message_to_dict(m) for m in ContactMessage.objects.all()]
 
     def message_to_dict(self, message_obj):
-        
+
         from common.models import ContactMessage
 
         return {
