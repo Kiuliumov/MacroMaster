@@ -1,6 +1,5 @@
 ![cover image](screenshots/MacroMaster.png)
  
- 
  # MacroMaster
 
 **MacroMaster** is a decoupled **Django + React** web application designed to track calories, manage nutrition, and foster community engagement. The platform combines a modern frontend with a powerful backend to deliver real-time updates, advanced analytics, and an intuitive user experience.
@@ -41,25 +40,31 @@
 
 ## Screenshots
 
-### Web Pages
-| About Page | Account Home | Careers Animation | Features Page |
-|------------|--------------|-----------------|---------------|
-| ![aboutPage](screenshots/application/aboutPage.png) | ![accountHome](screenshots/application/accountHome.png) | ![careersAnimation](screenshots/application/careersAnimation.png) | ![featuresPage](screenshots/application/featuresPage.png) |
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <img src="screenshots/application/aboutPage.png" alt="About Page" width="400">
+  <img src="screenshots/application/accountHome.png" alt="Account Home" width="400">
+  <img src="screenshots/application/careersAnimation.png" alt="Careers Animation" width="400">
+  <img src="screenshots/application/featuresPage.png" alt="Features Page" width="400">
+</div>
 
-### UI Components
-| Footer Section | Light Mode Home | Login Form | Mobile Home |
-|----------------|----------------|------------|-------------|
-| ![footer](screenshots/application/footer.png) | ![lightModeHome](screenshots/application/lightModeHome.png) | ![loginForm](screenshots/application/loginForm.png) | ![mobileHome](screenshots/application/mobileHome.png) |
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <img src="screenshots/application/footer.png" alt="Footer Section" width="400">
+  <img src="screenshots/application/lightModeHome.png" alt="Light Mode Home" width="400">
+  <img src="screenshots/application/loginForm.png" alt="Login Form" width="400">
+  <img src="screenshots/application/mobileHome.png" alt="Mobile Home" width="400">
+</div>
 
-### Mobile Views
-| Mobile Navigation | No Account Home | Onboarding Step 1 | Onboarding Step 2 |
-|-----------------|----------------|-----------------|-----------------|
-| ![mobileNav](screenshots/application/mobileNav.png) | ![noAccountHome](screenshots/application/noAccountHome.png) | ![onboarding1](screenshots/application/onboarding1.png) | ![onboarding2](screenshots/application/onboarding2.png) |
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <img src="screenshots/application/mobileNav.png" alt="Mobile Navigation" width="400">
+  <img src="screenshots/application/noAccountHome.png" alt="No Account Home" width="400">
+  <img src="screenshots/application/onboarding1.png" alt="Onboarding Step 1" width="400">
+  <img src="screenshots/application/onboarding2.png" alt="Onboarding Step 2" width="400">
+</div>
 
-### Forms & Support
-| Pricing Plans | Register Form | Support Page |
-|---------------|---------------|--------------|
-| ![pricingPlans](screenshots/application/pricingPlans.png) | ![registerForm](screenshots/application/registerForm.png) | ![supportPage](screenshots/application/supportPage.png) |
-
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <img src="screenshots/application/pricingPlans.png" alt="Pricing Plans" width="400">
+  <img src="screenshots/application/registerForm.png" alt="Register Form" width="400">
+  <img src="screenshots/application/supportPage.png" alt="Support Page" width="400">
+</div>
 
 
