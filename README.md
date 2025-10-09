@@ -1,4 +1,4 @@
-![cover_image]screenshots/MacroMaster.png)
+![cover image](screenshots/MacroMaster.png)
  
  
  # MacroMaster
@@ -60,5 +60,6 @@
 | Pricing Plans | Register Form | Support Page |
 |---------------|---------------|--------------|
 | ![pricingPlans](screenshots/application/pricingPlans.png) | ![registerForm](screenshots/application/registerForm.png) | ![supportPage](screenshots/application/supportPage.png) |
+
 
 
