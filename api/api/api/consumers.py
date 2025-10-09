@@ -48,9 +48,13 @@ class ContactMessageConsumer(AsyncWebsocketConsumer):
     async def broadcast_message(self, event):
         await self.send(text_data=json.dumps(event))
 
+    # importing inside the helper methods because the apps need to load first. Thanks django <3;
+
     @sync_to_async
     def create_contact_message(self, data):
+
         from common.models import ContactMessage
+
         return ContactMessage.objects.create(
             name=data.get("name", ""),
             email=data.get("email", ""),
@@ -60,7 +64,9 @@ class ContactMessageConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def delete_contact_message(self, message_id):
+
         from common.models import ContactMessage
+
         try:
             obj = ContactMessage.objects.get(id=message_id)
             obj.delete()
@@ -70,11 +76,15 @@ class ContactMessageConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def get_all_messages(self):
+
         from common.models import ContactMessage
+
         return [self.message_to_dict(m) for m in ContactMessage.objects.all()]
 
     def message_to_dict(self, message_obj):
+        
         from common.models import ContactMessage
+
         return {
             "id": message_obj.id,
             "name": message_obj.name,
