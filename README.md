@@ -49,9 +49,7 @@
   <img src="screenshots/application/footer.png" alt="Footer Section" style="width:100%; height:auto;">
   <img src="screenshots/application/lightModeHome.png" alt="Light Mode Home" style="width:100%; height:auto;">
   <img src="screenshots/application/loginForm.png" alt="Login Form" style="width:100%; height:auto;">
-  <img src="screenshots/application/mobileHome.png" alt="Mobile Home" style="width:100%; height:auto;">
 
-  <img src="screenshots/application/mobileNav.png" alt="Mobile Navigation" style="width:100%; height:auto;">
   <img src="screenshots/application/noAccountHome.png" alt="No Account Home" style="width:100%; height:auto;">
   <img src="screenshots/application/onboarding1.png" alt="Onboarding Step 1" style="width:100%; height:auto;">
   <img src="screenshots/application/onboarding2.png" alt="Onboarding Step 2" style="width:100%; height:auto;">
@@ -60,6 +58,7 @@
   <img src="screenshots/application/registerForm.png" alt="Register Form" style="width:100%; height:auto;">
   <img src="screenshots/application/supportPage.png" alt="Support Page" style="width:100%; height:auto;">
 </div>
+
 
 
 
