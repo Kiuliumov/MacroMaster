@@ -60,5 +60,5 @@
 </div>
 
 
-It's still under development.
+It's still under intial development phase.
 
